@@ -6,7 +6,7 @@ to_address = "cj.welschen@gmail.com"
 msg = "Test crown job"
 
 usr = "cyril.welschen"
-pwd = "Ichhakeis+1nfes"
+pwd = "PASSWORD"
 
 server = smtplib.SMTP('smtp.gmail.com:587')
 server.starttls()

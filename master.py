@@ -52,7 +52,7 @@ def send_mail(message):
     from_address = "cyril.welschen@gmail.com"
     to_address = "cj.welschen@gmail.com"
     usr = "cyril.welschen"
-    pwd = "Ichhakeis+1nfes"
+    pwd = "PASSWORD"
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()
     server.login(usr, pwd)
