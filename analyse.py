@@ -16,21 +16,7 @@ def name(string):
     return string.split(": ")[1]
 
 
-# prepare db
-
-try:
-    os.remove('gastrofull.db')
-    print("removing existing db file")
-except OSError as e:
-    print("Db file doesn't exist, creating it...")
-conn = sqlite3.connect('gastrofull.db')
-c = conn.cursor()
-c.execute(
-    '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT, 'check_out' TEXT, 
-    'guest_name' TEXT, 'creation_date' TEXT)''')
-
 # read csv
-
 db_list_of_lists = []
 res_id_deleted = []
 # [id, zimmer, ankunft, abreise, name, erstellungsdatum]
@@ -40,7 +26,6 @@ row_list = []
 with open("Prot.csv", "rb") as fi:
     for line in fi:
         row_list.append(line.decode("iso-8859-1"))
-    # row_list.append(f.readline().decode("iso-8859-1"))
 
 list_of_row_lists = []
 for row in row_list:
@@ -57,6 +42,8 @@ for row in list_of_row_lists:
             r += i.split(";")
         else:
             r.append(i)
+
+    """
     # check 1: column 5 is in 300, 301, ...
     if r[3][:len("prot_Aufen")] == "prot_Aufen":
         if r[3][-len("scht"):] == "scht":
@@ -81,6 +68,7 @@ for row in list_of_row_lists:
             uniq_ana_f.append(r[3])
     except IndexError:
         print(r)
+    """
 
 for i in set(uniq_ana):
     for j, ele in enumerate(uniq_ana):
