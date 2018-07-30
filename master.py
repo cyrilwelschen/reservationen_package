@@ -33,7 +33,7 @@ class TransferData:
 
 
 def upload(local_dir, filename):
-    access_token = 'kLCVZpHRI0AAAAAAAAAADQoUzmf40WCBxAG1r162461LWCT5d4Ta2niFl4XMk5aG'
+    access_token = 'dropbox_token'
     transfer_data = TransferData(access_token)
 
     file_from = local_dir + filename
@@ -49,9 +49,9 @@ def make_stamp():
 
 
 def send_mail(message):
-    from_address = "cyril.welschen@gmail.com"
-    to_address = "cj.welschen@gmail.com"
-    usr = "cyril.welschen"
+    from_address = "example@gmail.com"
+    to_address = "example@gmail.com"
+    usr = "example.user"
     pwd = "PASSWORD"
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.starttls()

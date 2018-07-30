@@ -21,7 +21,7 @@ class TransferData:
 
 
 def upload(local_dir, filename):
-    access_token = 'kLCVZpHRI0AAAAAAAAAADQoUzmf40WCBxAG1r162461LWCT5d4Ta2niFl4XMk5aG'
+    access_token = 'dropbox_token'
     transfer_data = TransferData(access_token)
 
     file_from = local_dir + filename

@@ -1,11 +1,11 @@
 import smtplib
 
-from_address = "cyril.welschen@gmail.com"
-to_address = "cj.welschen@gmail.com"
+from_address = "example@gmail.com"
+to_address = "example@gmail.com"
 
 msg = "Test crown job"
 
-usr = "cyril.welschen"
+usr = "example.user"
 pwd = "PASSWORD"
 
 server = smtplib.SMTP('smtp.gmail.com:587')
