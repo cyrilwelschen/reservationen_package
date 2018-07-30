@@ -27,9 +27,12 @@ def test_patterns():
 def process_line(pattern_and_meaning, test_list):
     if match_pattern(pattern_and_meaning[0], test_list):
         meaning = pattern_and_meaning[1]
+        # todo: handle matches, but ignores
         return convert_to_meaning(meaning, test_list)
     else:
-        return "no match: ", test_list
+        # todo: send mail with no-match
+        # return "no match: ", test_list
+        return []
 
 
 def convert_to_meaning(meaning, test_list):
