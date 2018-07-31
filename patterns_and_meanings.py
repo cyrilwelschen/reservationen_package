@@ -1,84 +1,68 @@
-def test_known_patterns_and_meanings():
-    pat1 = (['T', 'T', "prot_Aufen", 'i'], ['', '', '', ''])
-    return [pat1]
-
-
-def test_patterns():
-    test1 = ['asdf', 3, 'prot_aufen', 3]
-    test2 = ['asdf', 3, 'prot_Aufen', 3]
-    test3 = ['asdf', 3, 'prot_Aufen', 3.7]
-    test4 = ['asdf', 3, 'prot_Aufenthalt', 3]
-    for pat in test_known_patterns_and_meanings():
-        print(process_line(pat, test1))
-        print(process_line(pat, test2))
-        print(process_line(pat, test3))
-        print(process_line(pat, test4))
-
-
 def known_patterns_and_meanings():
     # pat3 = ([20170416, '19:16:17', '', 'prot_Aufenthalt Nr:777 20170513-20170513:Permbhusri Bambi gelöscht',
     # 'AUFENT_LOESC', 777, 8407, 9, 'RECEPTION', 2], 10*[''])
-    pat3 = (['i', 'T', 'T', 'prot_Aufenthalt', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat3 = (['i', 'T', 'T', 'prot_Aufenthalt', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat2 = ([20170402, '11:55:55', '', 'prot_Aufenthalt geändert Nr:637 ZNr: 7           20170331-20170401',
     # 'AUFENTHALT', 637, 0, 7, 'RECEPTION', 2], 10*[''])
-    pat2 = (['i', 'T', 'T', 'prot_Aufenthalt ge', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat2 = (['i', 'T', 'T', 'prot_Aufenthalt ge', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat4 = ([20170502, '18:22:11', '', 'prot_Aufenthalt neu Nr:846 ZNr: 5    Termin gerade reserviert ...
     # 20170505-20170505', 'RESERVIERUNG', 846, 8463, 5, 'RECEPTION', 2], 10*[''])
-    pat4 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat4 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat5 = ([20170806, '21:31:36', '', 'prot_Aufenthalt neu Nr:1616 ZNr: 14  \x98\x05r\x02', '\x93bÊF Termin gerade
     #  reserviert ... 20170825-20170825', 'RESERVIERUNG', 1616, 9095, 14, 'RECEPTION', 2], 11*[''])
-    pat5 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11*[''])
+    pat5 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
     # pat8 = ([20180512, ' 8:08:21', '', '"prot_Aufenthalt neu Nr:3066 ZNr: 2   ', '\x92\x99wã\x17 Termin gerade
     # reserviert ... 20180514-20180514"', 'RESERVIERUNG', 3066, 10047, 2, 'RECEPTION', 2], 11*[''])
-    pat8 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11*[''])
+    pat8 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
     # pat9 = ([20180415, '11:15:17', '', 'prot_Aufenthalt neu Nr:2880 ZNr: 4   l\x91Xtn. Termin gerade reserviert ...
     #  20190216-20190222', 'ANGEBOT', 2880, 1597, 4, 'RECEPTION', 2], 10*[''])
-    pat9 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat9 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat10 = ([20180307, ' 8:00:07', '', '"prot_Aufenthalt neu Nr:2596 ZNr: 9   l\x91¾s£\r Termin gerade reserviert
     # ... 20180403-20180407"', 'ANGEBOT', 2596, 7262, 9, 'RECEPTION', 2], 10*[''])
-    pat10 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat10 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat11 = ([20180306, '18:34:45', '', '"prot_Aufenthalt neu Nr:2595 ZNr: 11  l\x91¾s£\r Termin gerade reserviert
     # ... 20190223-20190301"', 'RESERVIERUNG', 2595, 8099, 11, 'RECEPTION', 2], 10*[''])
-    pat11 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat11 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat1 = ([20161110, '16:59:17', '0.00', 'Termin geändert: Welschen', 308, ' 11.11.2016-13.11.2016',
     # 'AUFENTHALT', 12, 7413, 7, 'RECEPTION', 2], [])
-    pat1 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], ['']*12)
+    pat1 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], [''] * 12)
     # pat6 = ([20171226, '14:59:58'    # pat11 = (, *['']), '0.00', 'Termin geändert: Walla', 315,
     # ' 23.12.2017-27.12.2017', ' 1 Pax', ' F', 'AUFENTHALT', 1918, 9313, 12, 'RECEPTION', 2], 14*[''])
-    pat6 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 14*[''])
+    pat6 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 14 * [''])
     # pat7 = ([20180507, ' 9:08:34', '', 'prot_Zimmertausch Nr:2482  ZNr: 14', 'AUFENTHALT', 2482, 0, 14,
     # 'RECEPTION', 2], 10*[''])
-    pat7 = (['i', 'T', 'T', 'prot_Zimmertausch', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat7 = (['i', 'T', 'T', 'prot_Zimmertausch', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat12 = ([20180510, '13:44:27', '', '"prot_Aufenthalt neu Nr:3057 ZNr: 19  ', '\x92\x99wï\x11 Termin gerade
     # reserviert ... 20190323-20190329"', 'ANGEBOT', 3057, 8048, 19, 'RECEPTION', 2], 11*[''])
-    pat12 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 11*[''])
+    pat12 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
     # pat13 = ([20180317, ' 9:20:44', '', 'prot_Aufenthalt neu Nr:2678 ZNr: 20   Termin gerade reserviert ...
     # 20190309-20190315', 'BELEGUNG', 2678, 2295, 20, 'RECEPTION', 2], 10*[''])
-    pat13 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'BELEGUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat13 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'BELEGUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # --------------------
     # pat14 = ([20180122, '17:43:24', '', '"prot_Aufenthalt neu Nr:2334 ZNr: 10  l\x91/uä\n'], 4*[''])
-    pat14 = (['i', 'T', 'T', '"prot_Aufenthalt neu'], 4*[''])
+    pat14 = (['i', 'T', 'T', '"prot_Aufenthalt neu'], 4 * [''])
     # pat15 = ([20180109, '15:50:02', '', 'prot_Aufenthalt neu Nr:2230 ZNr: 5   ¬ë\x19 Termin gerade reserviert ...
     # 20180217-20180223', '?', 2230, 9514, 5, 'RECEPTION', 2], 10*[''])
-    pat15 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat15 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat16 = ([' Termin gerade reserviert ... 20180217-20180223"', 'RESERVIERUNG', 2461, 9652, 5, 'RECEPTION', 2],
     # 7*[''])
-    pat16 = (['T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 7*[''])
+    pat16 = (['T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 7 * [''])
     # pat17 = (['& Termin gerade reserviert ... 20180217-20180223"', 'RESERVIERUNG', 2461, 9652, 5, 'RECEPTION', 2],
     # 7*[''])
-    pat17 = (['T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 7*[''])
+    pat17 = (['T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 7 * [''])
     # pat18 = ([20170515, '08:23:42', '0.00', '"Termin geändert: Portax', ' s.r.o', 301, ' 13.05.2017-15.05.2017"',
     # 'AUFENTHALT', 631, 8295, 1, 'RECEPTION', 2], 13*[''])
-    pat18 = (['i', 'T', 'T', '"Termin geändert', 'T', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 13*[''])
+    pat18 = (
+        ['i', 'T', 'T', '"Termin geändert', 'T', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 13 * [''])
     # pat19 = ([20170718, '17:58:26', '0.00', 'Termin gelöscht: Kraus Niklas', '  [301]', ' 24.02.2018-03.03.2018',
     # 'AUFENT_LOESC', 568, 3635, 0, 'RECEPTION', 2], 12*[''])
-    pat19 = (['i', 'T', 'T', 'Termin gelöscht', 'T', 'T', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'], 12*[''])
+    pat19 = (['i', 'T', 'T', 'Termin gelöscht', 'T', 'T', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'], 12 * [''])
     # pat20 = ([20170119, '19:33:08', '', 'prot_Ausschneiden Nr:243 ZNr: 15', 'AUFENTHALT', 243, 7916, 15,
     # 'RECEPTION', 2], 10*[''])
-    pat20 = (['i', 'T', 'T', 'prot_Ausschneiden', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat20 = (['i', 'T', 'T', 'prot_Ausschneiden', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # pat21 = ([20170119, '19:33:08', '', 'prot_Einfuegen Nr:243 ZNr: 9', 'AUFENTHALT', 243, 7916, 9, 'RECEPTION',
     # 2], 10*[''])
-    pat21 = (['i', 'T', 'T', 'prot_Einfuegen', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    pat21 = (['i', 'T', 'T', 'prot_Einfuegen', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
 
     # ----------------------------------------------------- ignore ----------------------------------------------------
     # Termin
@@ -405,5 +389,57 @@ def match_pattern_one_by_one(func_list, param_list):
     return match
 
 
+def test_known_patterns_and_meanings():
+    pat1 = (['T', 'T', "prot_Aufen", 'i'], ['', '', '', ''])
+    return [pat1]
+
+
+def test_patterns():
+    test1 = ['asdf', 3, 'prot_aufen', 3]
+    test2 = ['asdf', 3, 'prot_Aufen', 3]
+    test3 = ['asdf', 3, 'prot_Aufen', 3.7]
+    test4 = ['asdf', 3, 'prot_Aufenthalt', 3]
+    for pat in test_known_patterns_and_meanings():
+        print(process_line(pat, test1))
+        print(process_line(pat, test2))
+        print(process_line(pat, test3))
+        print(process_line(pat, test4))
+
+
+def real_test_data():
+    t3 = [20170416, '19:16:17', '', 'prot_Aufenthalt Nr:777 20170513-20170513:Permbhusri Bambi gelöscht',
+          'AUFENT_LOESC', 777, 8407, 9, 'RECEPTION', 2]
+    t2 = [20170402, '11:55:55', '', 'prot_Aufenthalt geändert Nr:637 ZNr: 7           20170331-20170401',
+          'AUFENTHALT', 637, 0, 7, 'RECEPTION', 2]
+    t4 = [20170502, '18:22:11', '',
+          'prot_Aufenthalt neu Nr:846 ZNr: 5    Termin gerade reserviert ... 20170505-20170505', 'RESERVIERUNG',
+          846, 8463, 5, 'RECEPTION', 2]
+    t5 = [20170806, '21:31:36', '', 'prot_Aufenthalt neu Nr:1616 ZNr: 14  \x98\x05r\x02',
+          '\x93bÊF Termin gerade reserviert ... 20170825-20170825', 'RESERVIERUNG', 1616, 9095, 14,
+          'RECEPTION', 2]
+    t8 = [20180512, ' 8:08:21', '', '"prot_Aufenthalt neu Nr:3066 ZNr: 2   ',
+          '\x92\x99wã\x17 Termin gerade reserviert ... 20180514-20180514"', 'RESERVIERUNG', 3066, 10047, 2,
+          'RECEPTION', 2]
+    t9 = [20180415, '11:15:17', '',
+          'prot_Aufenthalt neu Nr:2880 ZNr: 4   l\x91Xtn. Termin gerade reserviert ... 20190216-20190222',
+          'ANGEBOT', 2880, 1597, 4, 'RECEPTION', 2]
+    t10 = [20180307, ' 8:00:07', '',
+           '"prot_Aufenthalt neu Nr:2596 ZNr: 9   l\x91¾s£\r Termin gerade reserviert ... 20180403-20180407"',
+           'ANGEBOT', 2596, 7262, 9, 'RECEPTION', 2]
+    t11 = [20180306, '18:34:45', '',
+           '"prot_Aufenthalt neu Nr:2595 ZNr: 11  l\x91¾s£\r Termin gerade reserviert ... 20190223-20190301"',
+           'RESERVIERUNG', 2595, 8099, 11, 'RECEPTION', 2]
+    return [t2, t3, t4, t5, t8, t9, t10, t11]
+
+
+def test_real_data():
+    for t_list in real_test_data():
+        fou, li = perform_matching(t_list)
+        print(fou, li)
+
+
 if __name__ == "__main__":
     test_patterns()
+    test_real_data()
+
+
