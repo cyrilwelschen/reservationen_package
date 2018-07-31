@@ -55,11 +55,10 @@ def known_patterns_and_meanings():
     pat18 = (['i', 'T', 'T', '"Termin geändert', 'T', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 13*[''])
     # pat19 = ([20170718, '17:58:26', '0.00', 'Termin gelöscht: Kraus Niklas', '  [301]', ' 24.02.2018-03.03.2018', 'AUFENT_LOESC', 568, 3635, 0, 'RECEPTION', 2], 12*[''])
     pat19 = (['i', 'T', 'T', 'Termin gelöscht', 'T', 'T', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'], 12*[''])
-    # pat20 = (, *[''])
-    # pat21 = (, *[''])
-    # pat22 = (, *[''])
-    # pat23 = (, *[''])
-    # pat24 = (, *[''])
+    # pat20 = ([20170119, '19:33:08', '', 'prot_Ausschneiden Nr:243 ZNr: 15', 'AUFENTHALT', 243, 7916, 15, 'RECEPTION', 2], 10*[''])
+    pat20 = (['i', 'T', 'T', 'prot_Ausschneiden', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
+    # pat21 = ([20170119, '19:33:08', '', 'prot_Einfuegen Nr:243 ZNr: 9', 'AUFENTHALT', 243, 7916, 9, 'RECEPTION', 2], 10*[''])
+    pat21 = (['i', 'T', 'T', 'prot_Einfuegen', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10*[''])
 
     # ----------------------------------------------------- ignore ----------------------------------------------------
     # Termin
@@ -130,7 +129,7 @@ def known_patterns_and_meanings():
     # ign31 = ([20180106, '18:36:08', '522.00', 'Zahlungseingang: 1263', ' 522.00', ' Debitor->Visa', 'DEB_ZAHLUNG', 2062, 9404, 0, 'RECEPTION', 0], [False])
     ign31 = (['i', 'T', 'T', 'Zahlungseingang:', 'T', 'T', 'DEB_ZAHLUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
 
-    # ---------------------
+    # --------------------- selten
     # ign35 = ([20180109, '16:14:10', '380.00', '"Leistung geändert: 1 Pauschale ""Zermatt zum Kennenlernen""', ' 596.00 -> 1 Pauschale ""Zermatt zum Kennen"', 'AENDERN_LEIS', 2004, 2526, 0, 'RECEPTION', 2], [False])
     ign35 = (['i', 'T', 'T', '"Leistung ge', 'T', 'AENDERN_LEIS', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
     # ign36 = ([20180105, '17:41:44', '', 'prot_Extras eingestellt', 'SETUP', 2216, 9504, 3, 'RECEPTION', 2], [False])
@@ -153,10 +152,36 @@ def known_patterns_and_meanings():
     ign55 = (['i', 'T', 'T', 'Rechnung erstellt', 'T', 'T', 'RECHNUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
     # ign56 = ([20170916, '10:19:17', '196.00', 'Zahlungsart geändert: 1072', ' AMEX: 6.00', ' MASTER: 190.00 -> AMEX: 6.00', ' MASTER: 190.00', 'RECHNUNG_AEN', 1767, 9205, 11, 'RECEPTION', 2], [False])
     ign56 = (['i', 'T', 'T', 'Zahlungsart geändert', 'T', 'T', 'T', 'RECHNUNG_AEN', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
-    # ign57 = ( , [False])
-    # ign58 = ( , [False])
-    # ign59 = ( , [False])[20170708, '
+    # ign57 = ([20170923, '08:49:18', '0.00', '"Termin-Info geändert: Kinderbett', ' Informieren', ' falls... -> Kinderbett', ' | Informieren', ' fal..."', 'AUFENTHALT', 1843, 9258, 7, 'RECEPTION', 2], [False])
+    ign57 = (['i', 'T', 'T', '"Termin-Info geändert', 'T', 'T', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign58 = ([20170914, '09:23:15', '0.00', 'Termin-Info geändert: Virtuelle KK belastet', ' Gast za... -> Virtuelle KK', ' Gast zahlen K. s...', 'AUFENTHALT', 1507, 9006, 6, 'RECEPTION', 2], [False])
+    ign58 = (['i', 'T', 'T', 'Termin-Info geändert', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign59 = ([20161111, '10:17:49', '400.00', 'Umbuchen: 1 Leistungen umgebucht (CHF 400.00) -> T:6', 'TRANSFER', 6, 7933, 15, 'RECEPTION', 2], [False])
+    ign59 = (['i', 'T', 'T', 'Umbuchen:', 'TRANSFER', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign60 = ([20161111, '10:15:52', '0.00', 'RT gelöscht: GASTROdat GmbH', 'AUFENTHALT', 6, 0, 0, 'RECEPTION', 2], [False])
+    ign60 = (['i', 'T', 'T', 'RT ', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign61 = ([20161230, '23:17:31', '', '"prot_Kategorien', ' etc."', 'SETUP', 36, 0, 12, 'RECEPTION', 2], [False])
+    ign61 = (['i', 'T', 'T', '"prot_Kategorien', 'T', 'SETUP', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign65 = ([20170129, '14:52:23', '-9.00', '"Leistung gebucht: 3 Tourismustaxe 1 Pers.', ' -\x80 9', '00"', 'LEISTUNG', 162, 8030, 11, 'RECEPTION', 2], [False])
+    ign65 = (['i', 'T', 'T', '"Leistung gebucht', 'T', 'T', 'LEISTUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign66 = ([20170129, '10:33:22', '904.00', '"Rechnung erstellt: 97', ' \x80 904', 0, ' Mastercard: \x80 339', 0, ' EC Karte: \x80 452', 0, ' Comptant: \x80 113', 0, '"', 'RECHNUNG', 121, 1599, 4, 'RECEPTION', 2], [False])
+    ign66 = (['i', 'T', 'T', '"Rechnung erstellt', 'T', 'i', 'T', 'i', 'T', 'i', 'T', 'i', 'T', 'RECHNUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign67 = ([20161218, '10:32:27', '100.00', '"Anzahlung gebucht: Anzahlung: bar', ' \x80 100', '00"', 'ANZAHLUNG', 30, 7951, 0, 'RECEPTION', 2], [False])
+    ign67 = (['i', 'T', 'T', '"Anzahlung gebucht', 'T', 'T', 'ANZAHLUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    ign68 = (['i', 'T', 'T', '"Anzahlung gebucht', 'T', 'ANZAHLUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign69 = ([20170129, '09:19:07', '860.00', '"Zahlungsart geändert: 91', ' Bar: 860', '00 -> MASTER: 860', '00"', 'RECHNUNG_AEN', 123, 8006, 6, 'RECEPTION', 2], [False])
+    ign69 = (['i', 'T', 'T', '"Zahlungsart geändert', 'T', 'T', 'T', 'RECHNUNG_AEN', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign70 = ([20170129, '15:03:26', '8428.00', '"Zahlungsart geändert: 23', ' Bar: 8\xa0428', '00 -> Bar: 958', 0, ' MASTER: 4\xa0470', '00"', 'RECHNUNG_AEN', 51, 5373, 20, 'RECEPTION', 2], [False])
+    ign70 = (['i', 'T', 'T', '"Zahlungsart geändert', 'T', 'T', 'i', 'T', 'T', 'RECHNUNG_AEN', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign71 = ([20170726, '16:08:08', '80.00', '"Leistung geändert: 1 Speisen', ' 80.00 -> 1 Rosen', ' Wein + Käse', ' 80.00"', 'AENDERN_LEIS', 537, 8238, 0, 'RECEPTION', 2], [False])
+    ign71 = (['i', 'T', 'T', '"Leistung geändert', 'T', 'T', 'T', 'AENDERN_LEIS', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
     # ---------------------
+
+    # non Reception
+    # ign62 = ([20161108, '16:41:19', '', 'prot_fkt: LeistungNr.: 3 Pers. im Doppelzimmer aufgebucht', 'LEISTUNG', 3, 2, 8, '', 0], [False])
+    ign62 = (['i', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'e', 'i'], [False])
+    ign63 = (['i', 'T', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'e', 'i'], [False])
+    ign64 = (['i', 'T', 'T', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'e', 'i'], [False])
 
     # Gastdaten
     # ign6 = ([20170216, '16:42:59', '0.00', 'Gastdaten geändert: Neuer Gast -> Geschlossen', 'GAST', 0, 8163, 0, 'RECEPTION', 2], [False])
@@ -178,21 +203,42 @@ def known_patterns_and_meanings():
     ign49 = (['i', 'T', 'T', '"Gastdaten geändert:', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
     ign50 = (['i', 'T', 'T', 'Gastdaten geändert:', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
 
-    # DEMO
+    # Demo
     # ign80 = ([20171212, '11:56:00', '0.00', 'Termin geändert: Hotel Geschlossen', 900, ' 10.12.2017-13.12.2017', ' 1 Pax', ' F', 'AUFENTHALT', 2057, 9398, 21, 'DEMO', 1], [False])
     ign80 = (['i', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'DEMO', 'i'], [False])
     ign81 = (['i', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'DEMO', 'i'], [False])
     ign82 = (['i', 'T', 'T', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'DEMO', 'i'], [False])
     ign83 = (['i', 'T', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'DEMO', 'i'], [False])
     ign84 = (['i', 'T', 'T', 'T', 'T', 'i', 'i', 'i', 'DEMO', 'i'], [False])
+    ign85 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'DEMO', 'i'], [False])
+
+    # Special cases
+    # ign201 = (['DATUM', 'ZEIT', 'BETRAG', 'TEXT', 'AKTION', 'TERMIN_NR', 'PERS_NR', 'ZIMMER_NR', 'BENNAME', 'BEN_NR\r\n'], [False])
+    ign201 = (['T', 'ZEIT', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T'], [False])
+    # ign202 = ([20161110, '11:55:45', '90.00', 'Pauschalenpreis geändert: Pers. im DZSüd', ' CHF 105.00 -> CHF 90.00', 'AENDERN_LEIS', 4, 18, 2, 'RECEPTION', 2], [False])
+    ign202 = (['i', 'T', 'T', 'Pauschalenpreis', 'T', 'AENDERN_LEIS', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign203 = ([20161110, '16:55:55', '0.00', 'Auf Warteliste gesetzt: Marcher', 316, ' 14.11.2016-16.11.2016', 'AUFENTHALT', 14, 7933, 13, 'RECEPTION', 2], [False])
+    ign203 = (['i', 'T', 'T', 'Auf Warteliste', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign204 = ([20161111, '10:21:51', '100.00', '"Anzahlung vorgeschrieben: 13.11.2016', ' CHF 100.00"', 'ANZAHLUNG', 14, 7933, 0, 'RECEPTION', 2], [False])
+    ign204 = (['i', 'T', 'T', '"Anzahlung vorgeschrieben', 'T', 'ANZAHLUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign205 = ([20170106, '14:16:23', '1974.00', '"Anzahlungsrechnung: 22', ' \x80 1\xa0974', 0, ' Amex"', 'RECHNUNG', 49, 7968, 0, 'RECEPTION', 2], [False])
+    ign205 = (['i', 'T', 'T', '"Anzahlungsrechnung', 'T', 'i', 'T', 'RECHNUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign206 = ([20170129, '15:31:24', '397.50', '"Zahlungsart geändert: 41', ' Bar: 100', 0, ' VISA: 297', '50 -> VISA: 397', '50"', 'RECHNUNG_AEN', 63, 7981, 2, 'RECEPTION', 2], [False])
+    ign206 = (['i', 'T', 'T', '"Zahlungsart geändert', 'T', 'i', 'T', 'T', 'T', 'RECHNUNG_AEN', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign207 = ([20170209, '15:39:12', '', 'Gruppenreservierung: Römer Wolfgang', 326, ' 26.02.2017-01.03.2017', 'RESERVIERUNG', 395, 5680, 16, 'RECEPTION', 2], [False])
+    ign207 = (['i', 'T', 'T', 'Gruppenreservierung', 'i', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    # ign208 = ([20170320, '21:25:56', '5342.50', 'Anzahlungsrechnung: 252', " CHF 5'342.50", ' MasterCard', 'RECHNUNG', 612, 8281, 0, 'RECEPTION', 2], [False])
+    ign208 = (['i', 'T', 'T', 'Anzahlungsrechnung', "T", 'T', 'RECHNUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
 
     return [pat1, pat2, pat3, pat4, pat5, pat6, pat7, pat8, pat9, pat10, pat11, pat12, pat13, pat14, pat15, pat16,
-            pat17, pat18, pat19,
+            pat17, pat18, pat19, pat20, pat21,
             ign1, ign2, ign3, ign4, ign5, ign6, ign7, ign8, ign9, ign10, ign11, ign12, ign13, ign14, ign15,
             ign16, ign17, ign18, ign19, ign20, ign21, ign22, ign23, ign24, ign25, ign26, ign27, ign28, ign29,
             ign30, ign31, ign32, ign33, ign34, ign35, ign36, ign37, ign38, ign39, ign40, ign41, ign42, ign43, ign44,
-            ign45, ign46, ign47, ign48, ign49, ign50, ign51, ign52, ign53, ign54, ign55, ign56,
-            ign80, ign81, ign82, ign83, ign84]
+            ign45, ign46, ign47, ign48, ign49, ign50, ign51, ign52, ign53, ign54, ign55, ign56, ign57, ign58,
+            ign59, ign60, ign61, ign62, ign63, ign64, ign65, ign66, ign67, ign68, ign69, ign70, ign71,
+            ign80, ign81, ign82, ign83, ign84, ign85,
+            ign201, ign202, ign203, ign204, ign205, ign206, ign207, ign208]
 
 
 def make_func(p):
@@ -200,7 +246,9 @@ def make_func(p):
         return lambda x: True
     elif p == 'i':
         return lambda x: isinstance(x, int)
-    elif isinstance(p, str) and len(p) > 3:
+    elif p == 'e':
+        return lambda x: x == ''
+    elif isinstance(p, str) and len(p) > 2:
         return lambda x: x[:len(p)] == p
 
 
