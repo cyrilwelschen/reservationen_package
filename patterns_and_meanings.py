@@ -1,49 +1,133 @@
+import re
+
+
+def g_cd(item_list):
+    """
+    Generic creation date
+    """
+    return item_list[0]
+
+
+def g_st(status_letter):
+    if status_letter == 'd':
+        return "delete"
+    elif status_letter == 'c':
+        return "create"
+    elif status_letter == 'u':
+        return "update"
+    else:
+        return "unknown"
+
+
+def g_res_id(item_list):
+    return item_list[-5]
+
+
+def g_guest_id(item_list):
+    return item_list[-4]
+
+
+def g_room_id(item_list):
+    return item_list[-3]
+
+
+def generic(item_list, second_dic):
+    gene = { "room": g_room_id(item_list), "res_id": g_res_id(item_list), "guest_id": g_guest_id(item_list),
+             "original_list": str(item_list)}
+    # gene = {"res_id": g_res_id(item_list), "guest_id": g_guest_id(item_list), "room": g_room_id(item_list)}
+    return dict(gene, **second_dic)
+
+
+def g_pos4_ci(item_list):
+    return  regex_dates(item_list[3])[0]
+
+
+def g_pos4_co(item_list):
+    return  regex_dates(item_list[3])[1]
+
+
+def regex_dates(item_string):
+    matchObj = re.match(r'^.* ([0-9]+)-([0-9]+).*$', item_string)
+    if matchObj:
+        return matchObj.group(1), matchObj.group(2)
+    else:
+        raise LookupError("no date match found")
+
+
+# ['DATUM', 'ZEIT', 'BETRAG', 'TEXT', 'AKTION', 'TERMIN_NR', 'PERS_NR', 'ZIMMER_NR', 'BENNAME', 'BEN_NR\r\n']
 def known_patterns_and_meanings():
     # pat3 = ([20170416, '19:16:17', '', 'prot_Aufenthalt Nr:777 20170513-20170513:Permbhusri Bambi gelöscht',
     # 'AUFENT_LOESC', 777, 8407, 9, 'RECEPTION', 2], 10*[''])
-    pat3 = (['i', 'T', 'T', 'prot_Aufenthalt', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    # todo: guest name
+    pat3 = (['i', 'T', 'T', 'prot_Aufenthalt', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('d'), "pat_id": 3, "check_in": g_pos4_ci(i_li),
+                                             "check_out": g_pos4_co(i_li)})))
+
     # pat2 = ([20170402, '11:55:55', '', 'prot_Aufenthalt geändert Nr:637 ZNr: 7           20170331-20170401',
     # 'AUFENTHALT', 637, 0, 7, 'RECEPTION', 2], 10*[''])
-    pat2 = (['i', 'T', 'T', 'prot_Aufenthalt ge', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    pat2 = (['i', 'T', 'T', 'prot_Aufenthalt ge', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('u'), "pat_id": 2, "check_in": g_pos4_ci(i_li),
+                                             "check_out": g_pos4_co(i_li)})))
+
+    """
+    Pattern is less general than pattern nr 15. if leave this, it will get overridden by pattern 15's meaning...
+    therefore delete...
     # pat4 = ([20170502, '18:22:11', '', 'prot_Aufenthalt neu Nr:846 ZNr: 5    Termin gerade reserviert ...
     # 20170505-20170505', 'RESERVIERUNG', 846, 8463, 5, 'RECEPTION', 2], 10*[''])
-    pat4 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    pat4 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 4, "check_in": g_pos4_ci(i_li),
+                                             "check_out": g_pos4_co(i_li)})))
+    """
+
     # pat5 = ([20170806, '21:31:36', '', 'prot_Aufenthalt neu Nr:1616 ZNr: 14  \x98\x05r\x02', '\x93bÊF Termin gerade
     #  reserviert ... 20170825-20170825', 'RESERVIERUNG', 1616, 9095, 14, 'RECEPTION', 2], 11*[''])
     pat5 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
+
     # pat8 = ([20180512, ' 8:08:21', '', '"prot_Aufenthalt neu Nr:3066 ZNr: 2   ', '\x92\x99wã\x17 Termin gerade
     # reserviert ... 20180514-20180514"', 'RESERVIERUNG', 3066, 10047, 2, 'RECEPTION', 2], 11*[''])
     pat8 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
+
     # pat9 = ([20180415, '11:15:17', '', 'prot_Aufenthalt neu Nr:2880 ZNr: 4   l\x91Xtn. Termin gerade reserviert ...
     #  20190216-20190222', 'ANGEBOT', 2880, 1597, 4, 'RECEPTION', 2], 10*[''])
     pat9 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+
     # pat10 = ([20180307, ' 8:00:07', '', '"prot_Aufenthalt neu Nr:2596 ZNr: 9   l\x91¾s£\r Termin gerade reserviert
     # ... 20180403-20180407"', 'ANGEBOT', 2596, 7262, 9, 'RECEPTION', 2], 10*[''])
     pat10 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+
     # pat11 = ([20180306, '18:34:45', '', '"prot_Aufenthalt neu Nr:2595 ZNr: 11  l\x91¾s£\r Termin gerade reserviert
     # ... 20190223-20190301"', 'RESERVIERUNG', 2595, 8099, 11, 'RECEPTION', 2], 10*[''])
     pat11 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+
     # pat1 = ([20161110, '16:59:17', '0.00', 'Termin geändert: Welschen', 308, ' 11.11.2016-13.11.2016',
     # 'AUFENTHALT', 12, 7413, 7, 'RECEPTION', 2], [])
     pat1 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], [''] * 12)
     # pat6 = ([20171226, '14:59:58'    # pat11 = (, *['']), '0.00', 'Termin geändert: Walla', 315,
     # ' 23.12.2017-27.12.2017', ' 1 Pax', ' F', 'AUFENTHALT', 1918, 9313, 12, 'RECEPTION', 2], 14*[''])
     pat6 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 14 * [''])
+
     # pat7 = ([20180507, ' 9:08:34', '', 'prot_Zimmertausch Nr:2482  ZNr: 14', 'AUFENTHALT', 2482, 0, 14,
     # 'RECEPTION', 2], 10*[''])
     pat7 = (['i', 'T', 'T', 'prot_Zimmertausch', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+
     # pat12 = ([20180510, '13:44:27', '', '"prot_Aufenthalt neu Nr:3057 ZNr: 19  ', '\x92\x99wï\x11 Termin gerade
     # reserviert ... 20190323-20190329"', 'ANGEBOT', 3057, 8048, 19, 'RECEPTION', 2], 11*[''])
     pat12 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
+
     # pat13 = ([20180317, ' 9:20:44', '', 'prot_Aufenthalt neu Nr:2678 ZNr: 20   Termin gerade reserviert ...
     # 20190309-20190315', 'BELEGUNG', 2678, 2295, 20, 'RECEPTION', 2], 10*[''])
     pat13 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'BELEGUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # --------------------
+
     # pat14 = ([20180122, '17:43:24', '', '"prot_Aufenthalt neu Nr:2334 ZNr: 10  l\x91/uä\n'], 4*[''])
     pat14 = (['i', 'T', 'T', '"prot_Aufenthalt neu'], 4 * [''])
+
     # pat15 = ([20180109, '15:50:02', '', 'prot_Aufenthalt neu Nr:2230 ZNr: 5   ¬ë\x19 Termin gerade reserviert ...
     # 20180217-20180223', '?', 2230, 9514, 5, 'RECEPTION', 2], 10*[''])
-    pat15 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    pat15 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 15, "check_in": g_pos4_ci(i_li),
+                                              "check_out": g_pos4_co(i_li)})))
+
     # pat16 = ([' Termin gerade reserviert ... 20180217-20180223"', 'RESERVIERUNG', 2461, 9652, 5, 'RECEPTION', 2],
     # 7*[''])
     pat16 = (['T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 7 * [''])
@@ -327,7 +411,7 @@ def known_patterns_and_meanings():
     # 'RECHNUNG', 612, 8281, 0, 'RECEPTION', 2], [False])
     ign208 = (['i', 'T', 'T', 'Anzahlungsrechnung', "T", 'T', 'RECHNUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
 
-    return [pat1, pat2, pat3, pat4, pat5, pat6, pat7, pat8, pat9, pat10, pat11, pat12, pat13, pat14, pat15, pat16,
+    return [pat1, pat2, pat3, pat5, pat6, pat7, pat8, pat9, pat10, pat11, pat12, pat13, pat14, pat15, pat16,
             pat17, pat18, pat19, pat20, pat21,
             ign1, ign2, ign3, ign4, ign5, ign6, ign7, ign8, ign9, ign10, ign11, ign12, ign13, ign14, ign15,
             ign16, ign17, ign18, ign19, ign20, ign21, ign22, ign23, ign24, ign25, ign26, ign27, ign28, ign29,
@@ -351,10 +435,11 @@ def make_func(p):
 
 def perform_matching(item_list):
     found, li = False, []
-    for pat in known_patterns_and_meanings():
+    for i, pat in enumerate(known_patterns_and_meanings()):
         if len(pat[0]) == len(item_list):
             f, l_processed = process_line(pat, item_list)
             if f:
+                # print(i+1)
                 found = True
                 li = l_processed
     return found, li
@@ -364,6 +449,7 @@ def process_line(pattern_and_meaning, item_list):
     if match_pattern_one_by_one(pattern_and_meaning[0], item_list):
         meaning = pattern_and_meaning[1]
         if meaning:
+            # print("---meaning: ", convert_to_meaning(meaning, item_list), "\n")
             return True, convert_to_meaning(meaning, item_list)
         else:
             return True, []
@@ -375,9 +461,15 @@ def process_line(pattern_and_meaning, item_list):
 
 def convert_to_meaning(meaning, item_list):
     return_list = []
-    for m, item in zip(meaning, item_list):
-        if m == '':
-            return_list.append(item)
+    # not zip, but meaning takes ALL item_list items as arguments in a SINGLE lambda
+    # and makes dic out of them in one go.
+    if not isinstance(meaning, list):
+        return meaning(item_list)
+    else:
+        # if list (legacy)
+        for m, item in zip(meaning, item_list):
+            if m == '':
+                return_list.append(item)
     return return_list
 
 
@@ -439,7 +531,6 @@ def test_real_data():
 
 
 if __name__ == "__main__":
-    test_patterns()
+    # test_patterns()
     test_real_data()
-
 
