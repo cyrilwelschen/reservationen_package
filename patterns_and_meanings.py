@@ -15,6 +15,14 @@ def g_st(status_letter):
         return "create"
     elif status_letter == 'u':
         return "update"
+    elif status_letter == 'dr':
+        return "delete and remember"
+    elif status_letter == 'cr':
+        return "create on remember"
+    elif status_letter == 'rc':
+        return "room change"
+    elif status_letter == 'cwocio':
+        return "create without checkin checkout"
     else:
         return "unknown"
 
@@ -39,11 +47,19 @@ def generic(item_list, second_dic):
 
 
 def g_pos4_ci(item_list):
-    return  regex_dates(item_list[3])[0]
+    return regex_dates(item_list[3])[0]
 
 
 def g_pos4_co(item_list):
-    return  regex_dates(item_list[3])[1]
+    return regex_dates(item_list[3])[1]
+
+
+def pos_x_ci(item_list, ind):
+    return regex_dates(item_list[ind])[0]
+
+
+def pos_x_co(item_list, ind):
+    return regex_dates(item_list[ind])[1]
 
 
 def regex_dates(item_string):
@@ -52,6 +68,41 @@ def regex_dates(item_string):
         return matchObj.group(1), matchObj.group(2)
     else:
         raise LookupError("no date match found")
+
+
+def regex_ids(item_string):
+    mo = re.match(r'^.*Nr:([0-9]+).*ZNr:.*([0-9]+).*$')
+    if mo:
+        return mo.group(1), mo.group(2)
+    else:
+        raise LookupError("no id match found")
+
+
+def dc_2(item_list, ind):
+    """
+    Date conversion 2
+    :param item_list: Usual item list
+    :param ind: Index
+    :return: List of standard strings: [checkin, checkout]
+    """
+    double_date_string = item_list[ind]
+    if double_date_string[0] == " ":
+        double_date_string = double_date_string[1:]
+    ci_string, co_string = double_date_string.split("-")
+    ci_trip = ci_string.split(".")
+    co_trip = co_string.split(".")
+    if co_trip[2][-1] == '"':
+        return [ci_trip[2]+ci_trip[1]+ci_trip[0], co_trip[2][:-1]+co_trip[1]+co_trip[0]]
+    else:
+        return [ci_trip[2]+ci_trip[1]+ci_trip[0], co_trip[2]+co_trip[1]+co_trip[0]]
+
+
+def ci_dc_2(item_list, ind):
+    return dc_2(item_list, ind)[0]
+
+
+def co_dc_2(item_list, ind):
+    return dc_2(item_list, ind)[1]
 
 
 # ['DATUM', 'ZEIT', 'BETRAG', 'TEXT', 'AKTION', 'TERMIN_NR', 'PERS_NR', 'ZIMMER_NR', 'BENNAME', 'BEN_NR\r\n']
@@ -81,46 +132,67 @@ def known_patterns_and_meanings():
 
     # pat5 = ([20170806, '21:31:36', '', 'prot_Aufenthalt neu Nr:1616 ZNr: 14  \x98\x05r\x02', '\x93bÊF Termin gerade
     #  reserviert ... 20170825-20170825', 'RESERVIERUNG', 1616, 9095, 14, 'RECEPTION', 2], 11*[''])
-    pat5 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
+    pat5 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 5, "check_in": pos_x_ci(i_li, 4),
+                                             "check_out": pos_x_co(i_li, 4)})))
 
     # pat8 = ([20180512, ' 8:08:21', '', '"prot_Aufenthalt neu Nr:3066 ZNr: 2   ', '\x92\x99wã\x17 Termin gerade
     # reserviert ... 20180514-20180514"', 'RESERVIERUNG', 3066, 10047, 2, 'RECEPTION', 2], 11*[''])
-    pat8 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
+    pat8 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 8, "check_in": pos_x_ci(i_li, 4),
+                                             "check_out": pos_x_co(i_li, 4)})))
 
     # pat9 = ([20180415, '11:15:17', '', 'prot_Aufenthalt neu Nr:2880 ZNr: 4   l\x91Xtn. Termin gerade reserviert ...
     #  20190216-20190222', 'ANGEBOT', 2880, 1597, 4, 'RECEPTION', 2], 10*[''])
-    pat9 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    pat9 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 9, "check_in": pos_x_ci(i_li, 3),
+                                             "check_out": pos_x_co(i_li, 3)})))
 
     # pat10 = ([20180307, ' 8:00:07', '', '"prot_Aufenthalt neu Nr:2596 ZNr: 9   l\x91¾s£\r Termin gerade reserviert
     # ... 20180403-20180407"', 'ANGEBOT', 2596, 7262, 9, 'RECEPTION', 2], 10*[''])
-    pat10 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    pat10 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 10, "check_in": pos_x_ci(i_li, 3),
+                                              "check_out": pos_x_co(i_li, 3)})))
 
     # pat11 = ([20180306, '18:34:45', '', '"prot_Aufenthalt neu Nr:2595 ZNr: 11  l\x91¾s£\r Termin gerade reserviert
     # ... 20190223-20190301"', 'RESERVIERUNG', 2595, 8099, 11, 'RECEPTION', 2], 10*[''])
-    pat11 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    pat11 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 11, "check_in": pos_x_ci(i_li, 3),
+                                              "check_out": pos_x_co(i_li, 3)})))
 
     # pat1 = ([20161110, '16:59:17', '0.00', 'Termin geändert: Welschen', 308, ' 11.11.2016-13.11.2016',
     # 'AUFENTHALT', 12, 7413, 7, 'RECEPTION', 2], [])
-    pat1 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], [''] * 12)
+    pat1 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('u'), "pat_id": 1, "check_in": ci_dc_2(i_li, 5),
+                                             "check_out": co_dc_2(i_li, 5)})))
+
     # pat6 = ([20171226, '14:59:58'    # pat11 = (, *['']), '0.00', 'Termin geändert: Walla', 315,
     # ' 23.12.2017-27.12.2017', ' 1 Pax', ' F', 'AUFENTHALT', 1918, 9313, 12, 'RECEPTION', 2], 14*[''])
+    # todo: get a pattern 6 example
     pat6 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 14 * [''])
 
     # pat7 = ([20180507, ' 9:08:34', '', 'prot_Zimmertausch Nr:2482  ZNr: 14', 'AUFENTHALT', 2482, 0, 14,
     # 'RECEPTION', 2], 10*[''])
-    pat7 = (['i', 'T', 'T', 'prot_Zimmertausch', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    pat7 = (['i', 'T', 'T', 'prot_Zimmertausch', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('rc'), "pat_id": 7})))
 
     # pat12 = ([20180510, '13:44:27', '', '"prot_Aufenthalt neu Nr:3057 ZNr: 19  ', '\x92\x99wï\x11 Termin gerade
     # reserviert ... 20190323-20190329"', 'ANGEBOT', 3057, 8048, 19, 'RECEPTION', 2], 11*[''])
-    pat12 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 11 * [''])
+    pat12 = (['i', 'T', 'T', '"prot_Aufenthalt neu', 'T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 12, "check_in": pos_x_ci(i_li, 4),
+                                              "check_out": pos_x_co(i_li, 4)})))
 
     # pat13 = ([20180317, ' 9:20:44', '', 'prot_Aufenthalt neu Nr:2678 ZNr: 20   Termin gerade reserviert ...
     # 20190309-20190315', 'BELEGUNG', 2678, 2295, 20, 'RECEPTION', 2], 10*[''])
+    # todo: pat13 is less general than pattern 15, see if can delete this!
     pat13 = (['i', 'T', 'T', 'prot_Aufenthalt neu', 'BELEGUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
     # --------------------
 
     # pat14 = ([20180122, '17:43:24', '', '"prot_Aufenthalt neu Nr:2334 ZNr: 10  l\x91/uä\n'], 4*[''])
-    pat14 = (['i', 'T', 'T', '"prot_Aufenthalt neu'], 4 * [''])
+    # todo: get resID and roomNr form string.
+    # todo: implement and test prepared regex function.
+    pat14 = (['i', 'T', 'T', '"prot_Aufenthalt neu'],
+             lambda i_li: {"status": g_st('cwocio'), "pat_id": 14})
 
     # pat15 = ([20180109, '15:50:02', '', 'prot_Aufenthalt neu Nr:2230 ZNr: 5   ¬ë\x19 Termin gerade reserviert ...
     # 20180217-20180223', '?', 2230, 9514, 5, 'RECEPTION', 2], 10*[''])
@@ -130,23 +202,41 @@ def known_patterns_and_meanings():
 
     # pat16 = ([' Termin gerade reserviert ... 20180217-20180223"', 'RESERVIERUNG', 2461, 9652, 5, 'RECEPTION', 2],
     # 7*[''])
-    pat16 = (['T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'], 7 * [''])
+    pat16 = (['T', 'RESERVIERUNG', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 16, "check_in": pos_x_ci(i_li, 0),
+                                              "check_out": pos_x_co(i_li, 0)})))
+
     # pat17 = (['& Termin gerade reserviert ... 20180217-20180223"', 'RESERVIERUNG', 2461, 9652, 5, 'RECEPTION', 2],
     # 7*[''])
-    pat17 = (['T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'], 7 * [''])
+    # todo: pat17 is less general than pat16. check if pat 17 can be deleted
+    pat17 = (['T', 'ANGEBOT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('c'), "pat_id": 17, "check_in": pos_x_ci(i_li, 0),
+                                              "check_out": pos_x_co(i_li, 0)})))
+
     # pat18 = ([20170515, '08:23:42', '0.00', '"Termin geändert: Portax', ' s.r.o', 301, ' 13.05.2017-15.05.2017"',
     # 'AUFENTHALT', 631, 8295, 1, 'RECEPTION', 2], 13*[''])
     pat18 = (
-        ['i', 'T', 'T', '"Termin geändert', 'T', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 13 * [''])
+        ['i', 'T', 'T', '"Termin geändert', 'T', 'i', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+        lambda i_li: dict(generic(i_li, {"status": g_st('u'), "pat_id": 18, "check_in": ci_dc_2(i_li, 6),
+                                         "check_out": co_dc_2(i_li, 6)})))
+
     # pat19 = ([20170718, '17:58:26', '0.00', 'Termin gelöscht: Kraus Niklas', '  [301]', ' 24.02.2018-03.03.2018',
     # 'AUFENT_LOESC', 568, 3635, 0, 'RECEPTION', 2], 12*[''])
-    pat19 = (['i', 'T', 'T', 'Termin gelöscht', 'T', 'T', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'], 12 * [''])
+    pat19 = (['i', 'T', 'T', 'Termin gelöscht', 'T', 'T', 'AUFENT_LOESC', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('d'), "pat_id": 19, "check_in": ci_dc_2(i_li, 5),
+                                              "check_out": co_dc_2(i_li, 5)})))
+
     # pat20 = ([20170119, '19:33:08', '', 'prot_Ausschneiden Nr:243 ZNr: 15', 'AUFENTHALT', 243, 7916, 15,
     # 'RECEPTION', 2], 10*[''])
-    pat20 = (['i', 'T', 'T', 'prot_Ausschneiden', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    # todo: save date of current reservationID and delete reservation.
+    pat20 = (['i', 'T', 'T', 'prot_Ausschneiden', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('dr'), "pat_id": 20})))
+
     # pat21 = ([20170119, '19:33:08', '', 'prot_Einfuegen Nr:243 ZNr: 9', 'AUFENTHALT', 243, 7916, 9, 'RECEPTION',
     # 2], 10*[''])
-    pat21 = (['i', 'T', 'T', 'prot_Einfuegen', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 10 * [''])
+    # todo: create reservation on date form previously deleted reservation. If this doesn't come, forget about it.
+    pat21 = (['i', 'T', 'T', 'prot_Einfuegen', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+             lambda i_li: dict(generic(i_li, {"status": g_st('cr'), "pat_id": 21})))
 
     # ----------------------------------------------------- ignore ----------------------------------------------------
     # Termin
@@ -521,7 +611,41 @@ def real_test_data():
     t11 = [20180306, '18:34:45', '',
            '"prot_Aufenthalt neu Nr:2595 ZNr: 11  l\x91¾s£\r Termin gerade reserviert ... 20190223-20190301"',
            'RESERVIERUNG', 2595, 8099, 11, 'RECEPTION', 2]
-    return [t2, t3, t4, t5, t8, t9, t10, t11]
+
+    t1 = [20161110, '16:59:17', '0.00', 'Termin geändert: Welschen', 308, ' 11.11.2016-13.11.2016',
+          'AUFENTHALT', 12, 7413, 7, 'RECEPTION', 2]
+
+    # pat6 = ([20171226, '14:59:58'    # pat11 = (, *['']), '0.00', 'Termin geändert: Walla', 315,
+    # ' 23.12.2017-27.12.2017', ' 1 Pax', ' F', 'AUFENTHALT', 1918, 9313, 12, 'RECEPTION', 2], 14*[''])
+
+    t7 = [20180507, ' 9:08:34', '', 'prot_Zimmertausch Nr:2482  ZNr: 14', 'AUFENTHALT', 2482, 0, 14,
+           'RECEPTION', 2]
+
+    t12 = [20180510, '13:44:27', '', '"prot_Aufenthalt neu Nr:3057 ZNr: 19  ',
+           '\x92\x99wï\x11 Termin gerade reserviert ... 20190323-20190329"', 'ANGEBOT', 3057, 8048, 19, 'RECEPTION', 2]
+
+    t13 = [20180317, ' 9:20:44', '',
+           'prot_Aufenthalt neu Nr:2678 ZNr: 20   Termin gerade reserviert ... 20190309-20190315', 'BELEGUNG', 2678,
+           2295, 20, 'RECEPTION', 2]
+
+    t14 = [20180122, '17:43:24', '', '"prot_Aufenthalt neu Nr:2334 ZNr: 10  l\x91/uä\n']
+
+    t16 = [' Termin gerade reserviert ... 20180217-20180223"', 'RESERVIERUNG', 2461, 9652, 5, 'RECEPTION', 2]
+
+    t17 = ['& Termin gerade reserviert ... 20180217-20180223"', 'RESERVIERUNG', 2461, 9652, 5, 'RECEPTION', 2]
+
+    t18 = [20170515, '08:23:42', '0.00', '"Termin geändert: Portax', ' s.r.o', 301, ' 13.05.2017-15.05.2017"',
+           'AUFENTHALT', 631, 8295, 1, 'RECEPTION', 2]
+
+    t19 = [20170718, '17:58:26', '0.00', 'Termin gelöscht: Kraus Niklas', '  [301]', ' 24.02.2018-03.03.2018',
+           'AUFENT_LOESC', 568, 3635, 0, 'RECEPTION', 2]
+
+    t20 = [20170119, '19:33:08', '', 'prot_Ausschneiden Nr:243 ZNr: 15', 'AUFENTHALT', 243, 7916, 15,
+           'RECEPTION', 2]
+
+    t21 = [20170119, '19:33:08', '', 'prot_Einfuegen Nr:243 ZNr: 9', 'AUFENTHALT', 243, 7916, 9, 'RECEPTION', 2]
+
+    return [t2, t3, t4, t5, t8, t9, t10, t11, t1, t7, t12, t13, t14, t16, t17, t18, t19, t20, t21]
 
 
 def test_real_data():
