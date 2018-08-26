@@ -32,30 +32,6 @@ def name(string):
     return string.split(": ")[1]
 
 
-def write_to_db(row):
-    execution_string = "INSERT OR REPLACE INTO reservations VALUES ("
-    execution_string += "'" + safe_string(row[0]) + "', "
-    execution_string += "'" + safe_string(row[1]) + "', "
-    execution_string += "'" + safe_string(row[2]) + "', "
-    execution_string += "'" + safe_string(row[3]) + "', "
-    execution_string += "'" + safe_string(row[4]) + "', "
-    execution_string += "'" + safe_string(row[5]) + "')"
-    try:
-        exec_st = execution_string.encode("utf-8")
-        c.execute(exec_st.decode("utf-8"))
-        conn.commit()
-    except sqlite3.OperationalError as e:
-        print(execution_string)
-        raise e
-
-
-def update_db():
-    pass
-
-
-def delete_from_db():
-    pass
-
 
 def handle_create(dic_mean):
     pass

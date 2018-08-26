@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 
-class DbUtil():
+class DbUtil:
 
     def __init__(self, db_file):
         self.db_path = db_file
@@ -21,3 +21,29 @@ class DbUtil():
 
     def create_cursor(self):
         return self.conn.cursor()
+
+    @staticmethod
+    def safe_string(s):
+        return s
+
+    def write_to_db(self, row):
+        execution_string = "INSERT OR REPLACE INTO reservations VALUES ("
+        execution_string += "'" + self.safe_string(row[0]) + "', "
+        execution_string += "'" + self.safe_string(row[1]) + "', "
+        execution_string += "'" + self.safe_string(row[2]) + "', "
+        execution_string += "'" + self.safe_string(row[3]) + "', "
+        execution_string += "'" + self.safe_string(row[4]) + "', "
+        execution_string += "'" + self.safe_string(row[5]) + "')"
+        try:
+            exec_st = execution_string.encode("utf-8")
+            self.c.execute(exec_st.decode("utf-8"))
+            self.conn.commit()
+        except sqlite3.OperationalError as e:
+            print(execution_string)
+            raise e
+
+    def update_db(self):
+        pass
+
+    def delete_from_db(self):
+        pass
