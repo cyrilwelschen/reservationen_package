@@ -35,3 +35,6 @@ class DbUtil:
         except sqlite3.OperationalError as e:
             # todo: send mail notification
             raise e
+
+    def close_db(self):
+        self.conn.close()
