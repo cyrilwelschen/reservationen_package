@@ -22,6 +22,10 @@ class DbUtil:
     def create_cursor(self):
         return self.conn.cursor()
 
+    def create_table(self, creation_string):
+        self.c.execute(creation_string)
+        self.conn.commit()
+
     @staticmethod
     def safe_string(s):
         return s
