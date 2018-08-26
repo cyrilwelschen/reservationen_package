@@ -17,6 +17,7 @@ def setup_db():
     c.execute(
         '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT, 'check_out' TEXT, 
         'guest_name' TEXT, 'creation_date' TEXT)''')
+    return conn, c
 
 
 def an_format(anab_str):
@@ -31,8 +32,21 @@ def name(string):
     return string.split(": ")[1]
 
 
-def write_to_db():
-    pass
+def write_to_db(row):
+    execution_string = "INSERT OR REPLACE INTO reservations VALUES ("
+    execution_string += "'" + safe_string(row[0]) + "', "
+    execution_string += "'" + safe_string(row[1]) + "', "
+    execution_string += "'" + safe_string(row[2]) + "', "
+    execution_string += "'" + safe_string(row[3]) + "', "
+    execution_string += "'" + safe_string(row[4]) + "', "
+    execution_string += "'" + safe_string(row[5]) + "')"
+    try:
+        exec_st = execution_string.encode("utf-8")
+        c.execute(exec_st.decode("utf-8"))
+        conn.commit()
+    except sqlite3.OperationalError as e:
+        print(execution_string)
+        raise e
 
 
 def update_db():
@@ -67,7 +81,7 @@ def handle_meaning(dic_meaning):
         pass
 
 
-setup_db()
+conn, c = setup_db()
 
 # read csv
 db_list_of_lists = []
