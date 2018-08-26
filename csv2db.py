@@ -1,36 +1,16 @@
 # python3
 
-import os
-import sqlite3
 from patterns_and_meanings import perform_matching
+from db_util import DbUtil
 
 
-def setup_db():
-    try:
-        os.remove('gastrofull.db')
-        print("removing existing db file")
-    except OSError as e:
-        print(e)
-        print("Db file doesn't exist, creating it...")
-    conn = sqlite3.connect('gastrofull.db')
-    c = conn.cursor()
-    c.execute(
-        '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT, 'check_out' TEXT, 
-        'guest_name' TEXT, 'creation_date' TEXT)''')
-    return conn, c
-
-
-def an_format(anab_str):
-    return anab_str[:11]
-
-
-def ab_format(anab_str):
-    return anab_str[12:22]
+CREATE_TABLE_STRING = '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT,
+                            'check_out' TEXT, 'guest_name' TEXT, 'creation_date' TEXT)'''
+DB_FILE = 'gastrofull.db'
 
 
 def name(string):
     return string.split(": ")[1]
-
 
 
 def handle_create(dic_mean):
@@ -46,6 +26,7 @@ def handle_delete(dic_mean):
 
 
 def handle_meaning(dic_meaning):
+    print(dic_meaning)
     stat = dic_meaning["status"]
     if stat == "create":
         handle_create(dic_meaning)
@@ -57,68 +38,62 @@ def handle_meaning(dic_meaning):
         pass
 
 
-conn, c = setup_db()
-
-# read csv
-db_list_of_lists = []
-res_id_deleted = []
-# [id, zimmer, ankunft, abreise, name, erstellungsdatum]
-
-##
-row_list = []
-with open("/home/cyril/Desktop/GastroDat2/Prot.csv", "rb") as fi:
-    for line in fi:
-        row_list.append(line.decode("iso-8859-1"))
-
-list_of_row_lists = []
-for row in row_list:
-    list_of_row_lists.append(row.split(","))
-##
-
-# process data
-uniq_ana = []
-uniq_ana_f = []
-count = 0
-matched = 0
-no_match = 0
-for row in list_of_row_lists:
-    r = []
-    for i in row:
-        if ";" in i:
-            r += i.split(";")
-        else:
-            r.append(i)
-    clean_row = []
-    for i in r:
-        try:
-            clean_row.append(int(i))
-        except ValueError:
-            clean_row.append(i)
-
-    found, list = perform_matching(clean_row)
-    if found:
-        matched += 1
-        if count < 300:
-            if isinstance(list, dict):
-                print(found, list)
-        count += 1
-    else:
-        # todo: send mail with unfound pattern
-        no_match += 1
-        if count < 3000:
-            print(len(clean_row), clean_row)
-        count += 1
-
-print("matches: ", matched)
-print("no matches: ", no_match)
-
-
 def room_index_to_nr(index):
-    room_list = [" 300", " 301", " 302", " 303", " 304", " 304", " 305", " 306", " 307", " 308", " 309", " 310",
-                 " 311", " 312", " 314", " 315", " 316", " 317", " 320", " 330", " 340", " 350"]
+    # room_list = [" 300", " 301", " 302", " 303", " 304", " 304", " 305", " 306", " 307", " 308", " 309", " 310",
+    #              " 311", " 312", " 314", " 315", " 316", " 317", " 320", " 330", " 340", " 350"]
     room_list2 = ["300", "301", "302", "303", "304", "304", "305", "306", "307", "308", "309", "310",
                   "311", "312", "314", "315", "316", "317", "320", "330", "340", "350"]
     return room_list2[index]
+
+
+def minimal_safe_string(st):
+    return_st = st
+    if return_st[0] == " ":
+        return_st = return_st[1:]
+    return return_st.replace("'", " ")
+
+
+def safe_string(st):
+    safe_st = minimal_safe_string(st)
+    return safe_st
+
+
+if __name__ == "__main__":
+    db = DbUtil(DB_FILE)
+    row_list = []
+    with open("/home/cyril/Desktop/GastroDat2/Prot.csv", "rb") as fi:
+        for line in fi:
+            row_list.append(line.decode("iso-8859-1"))
+
+    list_of_row_lists = []
+    for row in row_list:
+        list_of_row_lists.append(row.split(","))
+    ##
+
+    # process data
+    count = 0
+    for row in list_of_row_lists:
+        r = []
+        for i in row:
+            if ";" in i:
+                r += i.split(";")
+            else:
+                r.append(i)
+        clean_row = []
+        for i in r:
+            try:
+                clean_row.append(int(i))
+            except ValueError:
+                clean_row.append(i)
+        found, dic_mean = perform_matching(clean_row)
+        if found:
+            if count < 300:
+                if isinstance(dic_mean, dict):
+                    handle_meaning(dic_mean)
+            count += 1
+        else:
+            # todo: send mail (with print statement) when pattern not found
+            print("Couldn't find pattern corresponding to {}".format(clean_row))
 
 
 """
@@ -146,23 +121,5 @@ try:
         uniq_ana.append(r[3][:10])
         uniq_ana_f.append(r[3])
 except IndexError:
-    print(r)
 """
 
-for i in set(uniq_ana):
-    for j, ele in enumerate(uniq_ana):
-        if ele == i:
-            print(uniq_ana_f[j])
-            break
-
-
-def minimal_safe_string(st):
-    return_st = st
-    if return_st[0] == " ":
-        return_st = return_st[1:]
-    return return_st.replace("'", " ")
-
-
-def safe_string(st):
-    safe_st = minimal_safe_string(st)
-    return safe_st
