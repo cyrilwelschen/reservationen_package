@@ -43,6 +43,11 @@ class CsvToDb:
         return room_list2[index]
 
     def read_and_convert(self):
+        li = self.read()
+        self.convert(li)
+
+    @staticmethod
+    def read():
         row_list = []
         with open("/home/cyril/Desktop/GastroDat2/Prot.csv", "rb") as fi:
             for line in fi:
@@ -50,8 +55,9 @@ class CsvToDb:
         list_of_row_lists = []
         for row in row_list:
             list_of_row_lists.append(row.split(","))
-        ##
-        # process data
+        return list_of_row_lists
+
+    def convert(self, list_of_row_lists):
         count = 0
         for row in list_of_row_lists:
             r = []
@@ -75,6 +81,7 @@ class CsvToDb:
             else:
                 # todo: send mail (with print statement) when pattern not found
                 print("Couldn't find pattern corresponding to {}".format(clean_row))
+        self.db.close_db()
 
 
 if __name__ == "__main__":
