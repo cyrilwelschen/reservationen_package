@@ -40,9 +40,10 @@ def g_room_id(item_list):
 
 
 def generic(item_list, second_dic):
-    gene = { "room": g_room_id(item_list), "res_id": g_res_id(item_list), "guest_id": g_guest_id(item_list),
-             "original_list": str(item_list)}
-    # gene = {"res_id": g_res_id(item_list), "guest_id": g_guest_id(item_list), "room": g_room_id(item_list)}
+    gene = {"original_list": str(item_list), "room_index": g_room_id(item_list), "res_id": g_res_id(item_list),
+            "guest_id": g_guest_id(item_list)}
+    gene = {"room_index": g_room_id(item_list), "res_id": g_res_id(item_list),
+            "guest_id": g_guest_id(item_list)}
     return dict(gene, **second_dic)
 
 
@@ -166,10 +167,11 @@ def known_patterns_and_meanings():
             lambda i_li: dict(generic(i_li, {"status": g_st('u'), "pat_id": 1, "check_in": ci_dc_2(i_li, 5),
                                              "check_out": co_dc_2(i_li, 5)})))
 
-    # pat6 = ([20171226, '14:59:58'    # pat11 = (, *['']), '0.00', 'Termin geändert: Walla', 315,
-    # ' 23.12.2017-27.12.2017', ' 1 Pax', ' F', 'AUFENTHALT', 1918, 9313, 12, 'RECEPTION', 2], 14*[''])
-    # todo: get a pattern 6 example
-    pat6 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'], 14 * [''])
+    # pat6 = [20180117, '12:00:20', '0.00', 'Termin geändert: Chung', 302, ' 27.05.2018-30.05.2018', ' 2 Pax', ' F',
+    # 'AUFENTHALT', 2288, 9544, 2, 'RECEPTION', 2]
+    pat6 = (['i', 'T', 'T', 'Termin ge', 'i', 'T', 'T', 'T', 'AUFENTHALT', 'i', 'i', 'i', 'RECEPTION', 'i'],
+            lambda i_li: dict(generic(i_li, {"status": g_st('u'), "pat_id": 1, "check_in": ci_dc_2(i_li, 5),
+                                             "check_out": co_dc_2(i_li, 5)})))
 
     # pat7 = ([20180507, ' 9:08:34', '', 'prot_Zimmertausch Nr:2482  ZNr: 14', 'AUFENTHALT', 2482, 0, 14,
     # 'RECEPTION', 2], 10*[''])
@@ -615,9 +617,8 @@ def real_test_data():
     t1 = [20161110, '16:59:17', '0.00', 'Termin geändert: Welschen', 308, ' 11.11.2016-13.11.2016',
           'AUFENTHALT', 12, 7413, 7, 'RECEPTION', 2]
 
-    # pat6 = ([20171226, '14:59:58'    # pat11 = (, *['']), '0.00', 'Termin geändert: Walla', 315,
-    # ' 23.12.2017-27.12.2017', ' 1 Pax', ' F', 'AUFENTHALT', 1918, 9313, 12, 'RECEPTION', 2], 14*[''])
-
+    t6 = [20180117, '12:00:20', '0.00', 'Termin geändert: Chung', 302, ' 27.05.2018-30.05.2018', ' 2 Pax', ' F',
+          'AUFENTHALT', 2288, 9544, 2, 'RECEPTION', 2]
     t7 = [20180507, ' 9:08:34', '', 'prot_Zimmertausch Nr:2482  ZNr: 14', 'AUFENTHALT', 2482, 0, 14,
            'RECEPTION', 2]
 
@@ -645,7 +646,7 @@ def real_test_data():
 
     t21 = [20170119, '19:33:08', '', 'prot_Einfuegen Nr:243 ZNr: 9', 'AUFENTHALT', 243, 7916, 9, 'RECEPTION', 2]
 
-    return [t2, t3, t4, t5, t8, t9, t10, t11, t1, t7, t12, t13, t14, t16, t17, t18, t19, t20, t21]
+    return [t2, t3, t4, t5, t8, t9, t10, t11, t1, t6, t7, t12, t13, t14, t16, t17, t18, t19, t20, t21]
 
 
 def test_real_data():

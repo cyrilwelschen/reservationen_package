@@ -56,6 +56,10 @@ for row in list_of_row_lists:
     found, list = perform_matching(clean_row)
     if found:
         matched += 1
+        if count < 300:
+            if isinstance(list, dict):
+                print(found, list)
+        count += 1
     else:
         no_match += 1
         if count < 3000:
