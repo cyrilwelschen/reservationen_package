@@ -5,6 +5,20 @@ import sqlite3
 from patterns_and_meanings import perform_matching
 
 
+def setup_db():
+    try:
+        os.remove('gastrofull.db')
+        print("removing existing db file")
+    except OSError as e:
+        print(e)
+        print("Db file doesn't exist, creating it...")
+    conn = sqlite3.connect('gastrofull.db')
+    c = conn.cursor()
+    c.execute(
+        '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT, 'check_out' TEXT, 
+        'guest_name' TEXT, 'creation_date' TEXT)''')
+
+
 def an_format(anab_str):
     return anab_str[:11]
 
@@ -16,6 +30,44 @@ def ab_format(anab_str):
 def name(string):
     return string.split(": ")[1]
 
+
+def write_to_db():
+    pass
+
+
+def update_db():
+    pass
+
+
+def delete_from_db():
+    pass
+
+
+def handle_create(dic_mean):
+    pass
+
+
+def handle_update(dic_mean):
+    pass
+
+
+def handle_delete(dic_mean):
+    pass
+
+
+def handle_meaning(dic_meaning):
+    stat = dic_meaning["status"]
+    if stat == "create":
+        handle_create(dic_meaning)
+    elif stat == "update":
+        handle_update(dic_meaning)
+    elif stat == "delete":
+        handle_delete(dic_meaning)
+    else:
+        pass
+
+
+setup_db()
 
 # read csv
 db_list_of_lists = []
@@ -61,6 +113,7 @@ for row in list_of_row_lists:
                 print(found, list)
         count += 1
     else:
+        # todo: send mail with unfound pattern
         no_match += 1
         if count < 3000:
             print(len(clean_row), clean_row)
