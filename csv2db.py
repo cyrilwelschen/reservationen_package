@@ -12,9 +12,21 @@ DB_FILE = 'gastrofull.db'
 class CsvToDb:
     def __init__(self):
         self.db = DbUtil(DB_FILE)
+        self.db.create_table(CREATE_TABLE_STRING)
+
+    @staticmethod
+    def reformat_date(date):
+        return date[-2:]+"."+date[-4:-2]+"."+date[:4]
 
     def handle_create(self, dic_mean):
-        pass
+        execution_string = "INSERT OR REPLACE INTO reservations VALUES ("
+        execution_string += "'" + dic_mean["res_id"] + "', "
+        execution_string += "'" + self.room_index_to_nr(dic_mean["room_index"]) + "', "
+        execution_string += "'" + self.reformat_date(dic_mean["check_in"]) + "', "
+        execution_string += "'" + self.reformat_date(dic_mean["check_out"]) + "', "
+        execution_string += "'" + dic_mean["guest_id"] + "', "
+        execution_string += "'" + "tbd" + "')"
+        self.db.execute_on_db(execution_string)
 
     def handle_update(self, dic_mean):
         pass

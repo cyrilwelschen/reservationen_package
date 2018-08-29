@@ -58,12 +58,12 @@ for row in list_of_row_lists:
         matched += 1
         if count < 300:
             if isinstance(list, dict):
-                print(found, list)
+                # print(found, list)
+                continue
         count += 1
     else:
         no_match += 1
-        if count < 3000:
-            print(len(clean_row), clean_row)
+        print(len(clean_row), clean_row)
         count += 1
 
 print("matches: ", matched)
