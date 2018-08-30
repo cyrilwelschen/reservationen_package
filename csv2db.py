@@ -4,15 +4,20 @@ from patterns_and_meanings import perform_matching
 from db_util import DbUtil
 
 
-CREATE_TABLE_STRING = '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT,
+CREATE_RES_TABLE = '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT,
+                                'check_out' TEXT, 'guest_name' TEXT, 'creation_date' TEXT, 'guest_id' TEXT)'''
+CREATE_GUEST_TABLE = '''CREATE TABLE "guests" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT,
                                 'check_out' TEXT, 'guest_name' TEXT, 'creation_date' TEXT)'''
-DB_FILE = 'gastrofull.db'
+RES_DB = 'gastrofull.db'
+GUEST_DB = 'guest.db'
 
 
 class CsvToDb:
     def __init__(self):
-        self.db = DbUtil(DB_FILE)
-        self.db.create_table(CREATE_TABLE_STRING)
+        self.db = DbUtil(RES_DB)
+        self.db.create_table(CREATE_RES_TABLE)
+        self.db_guest = DbUtil(GUEST_DB)
+        self.db_guest.create_table(CREATE_GUEST_TABLE)
 
     @staticmethod
     def reformat_date(date):
