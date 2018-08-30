@@ -81,7 +81,11 @@ def fing_geust(item_string):
             return mo.group(1)
         else:
             mo = re.match(r'^.*ert: ([a-z0-9]+).*$', item_string)
-            return mo.group(1)
+            if mo:
+                return mo.group(1)
+            else:
+                mo = re.match(r'^.*ert: - ([a-zA-Z]+).*$', item_string)
+                return mo.group(1)
 
 
 # todo: this doesn't work without , item_string) in first line
@@ -498,40 +502,44 @@ def known_patterns_and_meanings():
     pat540 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
               lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 540,
                             "original_list": i_li})
-    ign41 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
-    ign42 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-             [False])
-    ign43 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-             [False])
-    ign44 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION',
-              'i'], [False])
-    ign45 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i',
-              'RECEPTION', 'i'], [False])
-    ign46 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i',
-              'RECEPTION', 'i'], [False])
-    ign47 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i',
-              'i', 'RECEPTION', 'i'], [False])
-    ign48 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
-    ign49 = (['i', 'T', 'T', '"Gastdaten geändert:', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
-    ign50 = (['i', 'T', 'T', 'Gastdaten geändert:', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'], [False])
+    pat541 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 541,
+                            "original_list": i_li})
+    pat542 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 542,
+                            "original_list": i_li})
+    pat543 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 543,
+                            "original_list": i_li})
+    pat544 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION',
+               'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 544,
+                            "original_list": i_li})
+    pat545 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i',
+              'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 545,
+                            "original_list": i_li})
+    pat546 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i',
+              'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 546,
+                            "original_list": i_li})
+    pat547 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i',
+              'i', 'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 547,
+                            "original_list": i_li})
+    pat548 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 548,
+                            "original_list": i_li})
+    pat550 = (['i', 'T', 'T', 'Gastdaten geändert:', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
+              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 550,
+                            "original_list": i_li})
 
     return [pat1, pat2, pat3, pat5, pat6, pat7, pat8, pat9, pat10, pat11, pat12, pat13, pat14, pat15, pat16,
+            pat512, pat540, pat541, pat542, pat543, pat544, pat545, pat546, pat547, pat548, pat550,
             pat17, pat18, pat19, pat20, pat21,
             ign1, ign2, ign3, ign4, ign5, ign7, ign9, ign10, ign11, ign13, ign14, ign15,
             ign16, ign17, ign18, ign19, ign20, ign21, ign22, ign23, ign24, ign25, ign26, ign27, ign28, ign29,
             ign30, ign31, ign32, ign33, ign34, ign35, ign36, ign37, ign38, ign39,
-            pat512,
-            pat540,
-            ign41,
-            ign42,
-            ign43,
-            ign44,
-            ign45,
-            ign46,
-            ign47,
-            ign48,
-            ign49,
-            ign50,
             ign51, ign52, ign53, ign54, ign55, ign56, ign57, ign58,
             ign59, ign60, ign61, ign62, ign63, ign64, ign65, ign66, ign67, ign68, ign69, ign70, ign71,
             ign80, ign81, ign82, ign83, ign84, ign85,
@@ -676,9 +684,41 @@ def real_test_data():
     t21 = [20170119, '19:33:08', '', 'prot_Einfuegen Nr:243 ZNr: 9', 'AUFENTHALT', 243, 7916, 9, 'RECEPTION', 2]
 
     g512 = [20170709, '13:27:00', '0.00', 'Gast angelegt: Boonsararuxapong', 'GAST', 0, 8899, 0, 'RECEPTION', 2]
+
     g540 = [20170805, '11:41:38', '0.00', '"Gastdaten geändert: Bouvier-Oberson -> Bouvier-Oberson',' PEILLONNEX',
             ' 320 Route des Contamines"', 'GAST', 395, 8151, 0, 'RECEPTION', 2]
-    return [t2, t3, t4, t5, t8, t9, t10, t11, t1, t6, t7, t12, t13, t14, t16, t17, t18, t19, t20, t21, g512, g540]
+
+    g541 = [20180426, '10:42:40', '0.00', '"Gastdaten geändert: Bertschy -> Bertschy', ' Pascale', ' Biel/Bienne',
+          ' Chemin Bartolomé 11B"', 'GAST', 0, 9961, 0, 'RECEPTION', 2]
+
+    g542 = [20180512, '07:54:32', '0.00', '"Gastdaten geändert: Padden -> Padden', ' Timothy', ' FOREST LAKE', ' MN',
+            ' Jason Avenue North"', 'GAST', 0, 10045, 0, 'RECEPTION', 2]
+
+    g543 = [20180509, '10:36:23', '0.00', '"Gastdaten geändert: Mok -> Mok', ' Yuk Cheong', ' Tuen Mun Hong Kong',
+            ' Flat 12C', ' Block 1', ' Beneville"', 'GAST', 0, 10032, 0, 'RECEPTION', 2]
+
+    g544 = [20180510, '14:55:34', '0.00', '"Gastdaten geändert: Fernandez', ' Leila', ' London',
+            ' 420 Essex Road -> Fernandez', ' Leila', ' LONDON', ' 420 Essex"', 'GAST', 3058, 10041, 0, 'RECEPTION', 2]
+
+    g545 = [20180424, '08:56:39', '0.00', '"Gastdaten geändert: Cheung -> Cheung', ' Ho', ' HONG KONG', ' Rom C',
+            ' 20F', ' Block 1', ' Flora Plaza', ' Fanling"', 'GAST', 0, 9947, 0, 'RECEPTION', 2]
+
+    g546 = [20180330, '11:48:50', '0.00', '"Gastdaten geändert: Han Tzu -> Han Tzu', ' Wang', ' Taipei City', ' 4F',
+            ' No.62', ' Ln.62', ' Ln. 203', ' Sec. 2', ' Singlo"', 'GAST', 0, 9844, 0, 'RECEPTION', 2]
+
+    g547 = [20171002, '11:12:24', '0.00', '"Gastdaten geändert: Sato', ' hIROKI', ' TOKIO', ' 1-21-2', ' Gohongi',
+            ' Meguro-ku -> Sato', ' Hiroki', ' TOKIO', ' 1-21-2', '"', 'GAST', 1832, 9249, 0, 'RECEPTION', 2]
+
+    g548 = [20180509, '10:34:11', '0.00', '"Gastdaten geändert: Shenyun A. Liye -> Shenyun a. Liye', ' Ren a. Zhong"',
+            'GAST', 0, 10031, 0, 'RECEPTION', 2]
+
+    g549 = [20170802, '18:48:06', '0.00', '"Gastdaten geändert: - Schweitzer', ' Marielou"', 'GAST', 0, 6147, 0,
+            'RECEPTION', 2]
+
+    g550 = [20170808, '16:50:43', '0.00', 'Gastdaten geändert: Jae -> Rooeunjae', 'GAST', 0, 9110, 0, 'RECEPTION', 2]
+
+    return [t2, t3, t4, t5, t8, t9, t10, t11, t1, t6, t7, t12, t13, t14, t16, t17, t18, t19, t20, t21, g512, g540, g541,
+            g542, g543, g544, g545, g546, g547, g548, g549, g550]
 
 
 def test_real_data():
