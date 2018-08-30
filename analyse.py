@@ -39,6 +39,10 @@ uniq_ana_f = []
 count = 0
 matched = 0
 no_match = 0
+
+res_ids = []
+guest_ids = []
+
 for row in list_of_row_lists:
     r = []
     for i in row:
@@ -56,6 +60,14 @@ for row in list_of_row_lists:
     found, list = perform_matching(clean_row)
     if found:
         matched += 1
+        if isinstance(list, dict):
+            try:
+                res_ids.append(list["res_id"])
+            except KeyError:
+                try:
+                    guest_ids.append(list["guest_id"])
+                except KeyError:
+                    print(list)
         if count < 300:
             if isinstance(list, dict):
                 # print(found, list)
@@ -68,6 +80,8 @@ for row in list_of_row_lists:
 
 print("matches: ", matched)
 print("no matches: ", no_match)
+
+print(min(guest_ids), max(guest_ids), min(res_ids), max(res_ids))
 
 
 def room_index_to_nr(index):
