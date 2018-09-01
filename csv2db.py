@@ -5,9 +5,8 @@ from db_util import DbUtil
 
 
 CREATE_RES_TABLE = '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT,
-                                'check_out' TEXT, 'guest_name' TEXT, 'creation_date' TEXT, 'guest_id' TEXT)'''
-CREATE_GUEST_TABLE = '''CREATE TABLE "guests" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT,
-                                'check_out' TEXT, 'guest_name' TEXT, 'creation_date' TEXT)'''
+                                'check_out' TEXT, 'guest_name' TEXT, 'guest_id' TEXT)'''
+CREATE_GUEST_TABLE = '''CREATE TABLE "guests" ('guest_id' TEXT UNIQUE, 'guest_name' TEXT)'''
 RES_DB = 'gastrofull.db'
 GUEST_DB = 'guest.db'
 
@@ -23,32 +22,53 @@ class CsvToDb:
     def reformat_date(date):
         return date[-2:]+"."+date[-4:-2]+"."+date[:4]
 
+    def try_get_guest_name(self, guest_id):
+        self.db_guest.c.execute("SELECT guest_name FROM guests WHERE guest_id=?", (guest_id,))
+        try:
+            return self.db_guest.c.fetchone()[0]
+        except TypeError:
+            print("guest not found in db --> mail. guest_id: {}".format(guest_id))
+            return "not_found"
+
     def handle_create(self, dic_mean):
         execution_string = "INSERT OR REPLACE INTO reservations VALUES ("
-        execution_string += "'" + dic_mean["res_id"] + "', "
+        execution_string += "'" + str(dic_mean["res_id"]) + "', "
         execution_string += "'" + self.room_index_to_nr(dic_mean["room_index"]) + "', "
         execution_string += "'" + self.reformat_date(dic_mean["check_in"]) + "', "
         execution_string += "'" + self.reformat_date(dic_mean["check_out"]) + "', "
-        execution_string += "'" + dic_mean["guest_id"] + "', "
-        execution_string += "'" + "tbd" + "')"
+        execution_string += "'" + self.try_get_guest_name(dic_mean["guest_id"]) + "', "
+        execution_string += "'" + str(dic_mean["guest_id"]) + "')"
         self.db.execute_on_db(execution_string)
 
-    def handle_update(self, dic_mean):
-        pass
-
     def handle_delete(self, dic_mean):
-        pass
+        execution_string = "DELETE FROM reservations WHERE res_id=?"
+        self.db.c.execute(execution_string, (dic_mean["res_id"],))
+
+    @staticmethod
+    def safe_name(name):
+        return name.replace("'", '"')
+
+    def handle_guest(self, dic_mean):
+        execution_string = "INSERT OR REPLACE INTO guests VALUES ("
+        execution_string += "'" + str(dic_mean["guest_id"]) + "', "
+        execution_string += "'" + self.safe_name(dic_mean["g_name"]) + "')"
+        self.db_guest.c.execute(execution_string)
+        # self.db_guest.conn.commit()
 
     def handle_meaning(self, dic_meaning):
-        print(dic_meaning)
+        # print(dic_meaning)
         stat = dic_meaning["status"]
         if stat == "create":
             self.handle_create(dic_meaning)
         elif stat == "update":
-            self.handle_update(dic_meaning)
+            self.handle_create(dic_meaning)
         elif stat == "delete":
             self.handle_delete(dic_meaning)
+        elif stat == "guest":
+            self.handle_guest(dic_meaning)
         else:
+            # todo: implement mail
+            # raise KeyError("unknown status {}".format(stat))
             pass
 
     @staticmethod
@@ -56,8 +76,12 @@ class CsvToDb:
         # room_list = [" 300", " 301", " 302", " 303", " 304", " 304", " 305", " 306", " 307", " 308", " 309", " 310",
         #              " 311", " 312", " 314", " 315", " 316", " 317", " 320", " 330", " 340", " 350"]
         room_list2 = ["300", "301", "302", "303", "304", "304", "305", "306", "307", "308", "309", "310",
-                      "311", "312", "314", "315", "316", "317", "320", "330", "340", "350"]
-        return room_list2[index]
+                      "311", "312", "314", "315", "316", "317", "320", "330", "340", "350", "400"]
+        try:
+            return room_list2[index]
+        except IndexError:
+            print("Index Error --> mail {}".format(index))
+            return "99"
 
     def read_and_convert(self):
         li = self.read()
@@ -75,7 +99,8 @@ class CsvToDb:
         return list_of_row_lists
 
     def convert(self, list_of_row_lists):
-        count = 0
+        c, u, g, d, unf = 0, 0, 0, 0, 0
+        room_ids = []
         for row in list_of_row_lists:
             r = []
             for i in row:
@@ -91,44 +116,38 @@ class CsvToDb:
                     clean_row.append(i)
             found, dic_mean = perform_matching(clean_row)
             if found:
-                if count < 300:
-                    if isinstance(dic_mean, dict):
-                        self.handle_meaning(dic_mean)
-                count += 1
+                if isinstance(dic_mean, dict):
+                    self.handle_meaning(dic_mean)
+                    try:
+                        room_ids.append(dic_mean["room_index"])
+                        if dic_mean["room_index"] in [16]:
+                            print(dic_mean["original_list"])
+                    except KeyError:
+                        continue
+                    stat = dic_mean["status"]
+                    if stat == "update":
+                        u += 1
+                    elif stat == "create":
+                        c += 1
+                    elif stat == "guest":
+                        g += 1
+                    elif stat == "delete":
+                        d += 1
+                    else:
+                        unf += 1
             else:
                 # todo: send mail (with print statement) when pattern not found
                 print("Couldn't find pattern corresponding to {}".format(clean_row))
+        print(c, u, g, d, unf)
+        print(set(room_ids))
+        self.db.conn.commit()
+        self.db_guest.conn.commit()
         self.db.close_db()
+        self.db_guest.close_db()
+        print("finished")
 
 
 if __name__ == "__main__":
-    dbc = CsvToDb()
-    dbc.read_and_convert()
-
-"""
-# remember which reservaiton IDs were deleted
-if r[3][:len("prot_Aufen")] == "prot_Aufen":
-    if r[3][-len("scht"):] == "scht":
-        split_one = r[3].split(":")[1]
-        split_two = split_one.split(" ")
-        res_id_deleted.append(int(split_two[0]))
-# check 1: column 5 is in 300, 301, ...
-try:
-    if r[4] in [" 300", " 301", " 302", " 303", " 304", " 304", " 305", " 306", " 307", " 308", " 309", " 310",
-                " 311", " 312", " 314", " 315", " 316", " 317", " 320", " 330", " 340", " 350"]:
-        # check 2: column 4 starts with Terminxx...
-        if r[3][:len("Termin")] == "Termin":
-            # check 3: if column 7 is "AUFENTHALT" then 8 is ID 
-            if r[6] == "AUFENTHALT":
-                db_list_of_lists.append(
-                    [r[7], r[4], an_format(r[5]), ab_format(r[5]), name(r[3]), r[0] + " " + r[1]])
-            # check 3.2 else column 9 is "AUFENTHALT" then 10 is ID
-            elif r[8] == "AUFENTHALT":
-                db_list_of_lists.append(
-                    [r[9], r[4], an_format(r[5]), ab_format(r[5]), name(r[3]), r[0] + " " + r[1]])
-    else:
-        uniq_ana.append(r[3][:10])
-        uniq_ana_f.append(r[3])
-except IndexError:
-"""
+    dbr = CsvToDb()
+    dbr.read_and_convert()
 

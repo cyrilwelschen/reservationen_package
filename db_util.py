@@ -31,9 +31,9 @@ class DbUtil:
             # todo: check if encode/decode is really necessary?
             exec_st = execution_string.encode("utf-8")
             self.c.execute(exec_st.decode("utf-8"))
-            self.conn.commit()
         except sqlite3.OperationalError as e:
             # todo: send mail notification
+            print(exec_st)
             raise e
 
     def close_db(self):
