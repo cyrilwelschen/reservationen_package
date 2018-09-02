@@ -27,6 +27,7 @@ class DbUtil:
         self.conn.commit()
 
     def execute_on_db(self, execution_string):
+        exec_st = ""
         try:
             # todo: check if encode/decode is really necessary?
             exec_st = execution_string.encode("utf-8")

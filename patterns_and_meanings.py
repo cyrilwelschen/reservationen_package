@@ -64,14 +64,14 @@ def pos_x_co(item_list, ind):
 
 
 def regex_dates(item_string):
-    matchObj = re.match(r'^.* ([0-9]+)-([0-9]+).*$', item_string)
-    if matchObj:
-        return matchObj.group(1), matchObj.group(2)
+    match_obj = re.match(r'^.* ([0-9]+)-([0-9]+).*$', item_string)
+    if match_obj:
+        return match_obj.group(1), match_obj.group(2)
     else:
         raise LookupError("no date match found")
 
 
-def fing_geust(item_string):
+def find_guest(item_string):
     mo = re.match(r'^.*-> ([a-zA-Z]+).*$', item_string)
     if mo:
         return mo.group(1)
@@ -90,7 +90,7 @@ def fing_geust(item_string):
 
 # todo: this doesn't work without , item_string) in first line
 def regex_ids(item_string):
-    mo = re.match(r'^.*Nr:([0-9]+).*ZNr:.*([0-9]+).*$')
+    mo = re.match(r'^.*Nr:([0-9]+).*ZNr:.*([0-9]+).*$', item_string)
     if mo:
         return mo.group(1), mo.group(2)
     else:
@@ -495,43 +495,43 @@ def known_patterns_and_meanings():
     # pat512 = ([20170709, '13:27:00', '0.00', 'Gast angelegt: Boonsararuxapong', 'GAST', 0, 8899, 0, 'RECEPTION', 2],
     #  [False])
     pat512 = (['i', 'T', 'T', 'Gast angelegt', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-             lambda i_li: {"g_name": i_li[3][15:], "guest_id": i_li[-4], "status": "guest", "pat_id": 512,
-                           "original_list": i_li})
+              lambda i_li: {"g_name": i_li[3][15:], "guest_id": i_li[-4], "status": "guest", "pat_id": 512,
+                            "original_list": i_li})
     # pat540 = ([20170805, '11:41:38', '0.00', '"Gastdaten geändert: Bouvier-Oberson -> Bouvier-Oberson',
     # ' PEILLONNEX', ' 320 Route des Contamines"', 'GAST', 395, 8151, 0, 'RECEPTION', 2], [False])
     pat540 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 540,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 540,
                             "original_list": i_li})
     pat541 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 541,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 541,
                             "original_list": i_li})
     pat542 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 542,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 542,
                             "original_list": i_li})
     pat543 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 543,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 543,
                             "original_list": i_li})
     pat544 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION',
                'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 544,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 544,
                             "original_list": i_li})
     pat545 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i',
               'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 545,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 545,
                             "original_list": i_li})
     pat546 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i', 'i',
               'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 546,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 546,
                             "original_list": i_li})
     pat547 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'GAST', 'i', 'i',
               'i', 'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 547,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 547,
                             "original_list": i_li})
     pat548 = (['i', 'T', 'T', '"Gastdaten geändert:', 'T', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 548,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 548,
                             "original_list": i_li})
     pat550 = (['i', 'T', 'T', 'Gastdaten geändert:', 'GAST', 'i', 'i', 'i', 'RECEPTION', 'i'],
-              lambda i_li: {"g_name": fing_geust(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 550,
+              lambda i_li: {"g_name": find_guest(i_li[3]), "guest_id": i_li[-4], "status": "guest", "pat_id": 550,
                             "original_list": i_li})
 
     return [pat1, pat2, pat3, pat5, pat6, pat7, pat8, pat9, pat10, pat11, pat12, pat13, pat14, pat15, pat16,
@@ -657,7 +657,7 @@ def real_test_data():
     t6 = [20180117, '12:00:20', '0.00', 'Termin geändert: Chung', 302, ' 27.05.2018-30.05.2018', ' 2 Pax', ' F',
           'AUFENTHALT', 2288, 9544, 2, 'RECEPTION', 2]
     t7 = [20180507, ' 9:08:34', '', 'prot_Zimmertausch Nr:2482  ZNr: 14', 'AUFENTHALT', 2482, 0, 14,
-           'RECEPTION', 2]
+          'RECEPTION', 2]
 
     t12 = [20180510, '13:44:27', '', '"prot_Aufenthalt neu Nr:3057 ZNr: 19  ',
            '\x92\x99wï\x11 Termin gerade reserviert ... 20190323-20190329"', 'ANGEBOT', 3057, 8048, 19, 'RECEPTION', 2]
@@ -685,11 +685,11 @@ def real_test_data():
 
     g512 = [20170709, '13:27:00', '0.00', 'Gast angelegt: Boonsararuxapong', 'GAST', 0, 8899, 0, 'RECEPTION', 2]
 
-    g540 = [20170805, '11:41:38', '0.00', '"Gastdaten geändert: Bouvier-Oberson -> Bouvier-Oberson',' PEILLONNEX',
+    g540 = [20170805, '11:41:38', '0.00', '"Gastdaten geändert: Bouvier-Oberson -> Bouvier-Oberson', ' PEILLONNEX',
             ' 320 Route des Contamines"', 'GAST', 395, 8151, 0, 'RECEPTION', 2]
 
     g541 = [20180426, '10:42:40', '0.00', '"Gastdaten geändert: Bertschy -> Bertschy', ' Pascale', ' Biel/Bienne',
-          ' Chemin Bartolomé 11B"', 'GAST', 0, 9961, 0, 'RECEPTION', 2]
+            ' Chemin Bartolomé 11B"', 'GAST', 0, 9961, 0, 'RECEPTION', 2]
 
     g542 = [20180512, '07:54:32', '0.00', '"Gastdaten geändert: Padden -> Padden', ' Timothy', ' FOREST LAKE', ' MN',
             ' Jason Avenue North"', 'GAST', 0, 10045, 0, 'RECEPTION', 2]
@@ -730,4 +730,3 @@ def test_real_data():
 if __name__ == "__main__":
     # test_patterns()
     test_real_data()
-
