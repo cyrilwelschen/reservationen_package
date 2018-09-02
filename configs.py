@@ -1,7 +1,32 @@
 import os
 
 
-def file_found(file_path, content=None):
+class Configs:
+
+    def __init__(self, config_file_path):
+        self.config_path = input("Enter config file path: ")
+        if os.path.exists(self.config_path):
+            self.get_all_content()
+        else:
+            raise FileNotFoundError("config file not found")
+
+    def get_config_content(self, content):
+        if content:
+            with open(self.config_path, 'r') as f:
+                line = f.readline()
+                if content in line:
+                    return True
+        else:
+            return False
+
+    def get_all_content(self):
+        pass
+
+    def known_configs(self):
+        return ["dropbox_access_token", ]
+
+
+def config_content(file_path, content=None):
     if os.path.exists(file_path):
         if content:
             with open(file_path, 'r') as f:
@@ -18,7 +43,7 @@ def setup_files():
 
 
 def config_file_exists():
-    return file_found("config.txt", "status")
+    return config_content("config.txt", "status")
 
 
 def configs():
@@ -38,7 +63,7 @@ def reset_config_file():
 
 
 def vars_file_found_test():
-    return file_found("vars_test.txt", "@mail.co")
+    return config_content("vars_test.txt", "@mail.co")
 
 
 if __name__ == "__main__":
