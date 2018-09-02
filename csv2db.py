@@ -75,10 +75,10 @@ class CsvToDb:
     def room_index_to_nr(index):
         # room_list = [" 300", " 301", " 302", " 303", " 304", " 304", " 305", " 306", " 307", " 308", " 309", " 310",
         #              " 311", " 312", " 314", " 315", " 316", " 317", " 320", " 330", " 340", " 350"]
-        room_list2 = ["300", "301", "302", "303", "304", "304", "305", "306", "307", "308", "309", "310",
-                      "311", "312", "314", "315", "316", "317", "320", "330", "340", "350", "400"]
+        room_list2 = ["301", "302", "303", "304", "305", "307", "308", "309", "310",
+                      "311", "314", "315", "316", "317", "300", "326", "320", "330", "340", "350", "900", "901"]
         try:
-            return room_list2[index]
+            return room_list2[index - 1]
         except IndexError:
             print("Index Error --> mail {}".format(index))
             return "99"
@@ -101,6 +101,7 @@ class CsvToDb:
     def convert(self, list_of_row_lists):
         c, u, g, d, unf = 0, 0, 0, 0, 0
         room_ids = []
+        res_ids = []
         for row in list_of_row_lists:
             r = []
             for i in row:
@@ -124,6 +125,10 @@ class CsvToDb:
                             print(dic_mean["original_list"])
                     except KeyError:
                         continue
+                    try:
+                        res_ids.append(dic_mean["res_id"])
+                    except KeyError:
+                        continue
                     stat = dic_mean["status"]
                     if stat == "update":
                         u += 1
@@ -140,6 +145,7 @@ class CsvToDb:
                 print("Couldn't find pattern corresponding to {}".format(clean_row))
         print(c, u, g, d, unf)
         print(set(room_ids))
+        print(len(set(res_ids)))
         self.db.conn.commit()
         self.db_guest.conn.commit()
         self.db.close_db()
