@@ -10,6 +10,7 @@ class Configs:
             self.config_path = input("Enter config file path: ")
         self.configs = {}
         if os.path.exists(self.config_path):
+            self.configs["working_dir"] = os.path.dirname(self.config_path)
             for c in self.known_configs():
                 self.configs[c] = self.get_config_content(c)
         else:
@@ -29,7 +30,7 @@ class Configs:
 
     @staticmethod
     def known_configs():
-        return ["dropbox_access_token", "status", "admin", "mail_to", "mail_from", "mail_from_pwd"]
+        return ["dropbox_access_token", "status", "admin", "mail_to", "mail_from", "mail_from_pwd", "prot_file_path"]
 
 
 def config_content(file_path, content=None):
