@@ -3,27 +3,33 @@ import os
 
 class Configs:
 
-    def __init__(self, config_file_path):
-        self.config_path = input("Enter config file path: ")
+    def __init__(self, config_file_path=None):
+        if config_file_path:
+            self.config_path = config_file_path
+        else:
+            self.config_path = input("Enter config file path: ")
+        self.configs = {}
         if os.path.exists(self.config_path):
-            self.get_all_content()
+            for c in self.known_configs():
+                self.configs[c] = self.get_config_content(c)
         else:
             raise FileNotFoundError("config file not found")
 
     def get_config_content(self, content):
-        if content:
-            with open(self.config_path, 'r') as f:
-                line = f.readline()
+        config = None
+        with open(self.config_path, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
                 if content in line:
-                    return True
+                    config = line.split(": ")[1][:-1]
+        if config:
+            return config
         else:
-            return False
+            raise LookupError("Config file doesn't contain value for {}.".format(content))
 
-    def get_all_content(self):
-        pass
-
-    def known_configs(self):
-        return ["dropbox_access_token", ]
+    @staticmethod
+    def known_configs():
+        return ["dropbox_access_token", "status", "admin", "mail_to", "mail_from", "mail_from_pwd"]
 
 
 def config_content(file_path, content=None):
@@ -37,35 +43,6 @@ def config_content(file_path, content=None):
         return False
 
 
-def setup_files():
-    if not config_file_exists():
-        set_whole_config_file()
-
-
-def config_file_exists():
-    return config_content("config.txt", "status")
-
-
-def configs():
-    return ["status", "admin_name"]
-
-
-def set_whole_config_file():
-    with open("config.txt", "w") as f:
-        for c in configs():
-            c_inp = input("enter {}: ".format(c))
-            f.write(c + ":" + c_inp+"\n")
-
-
-def reset_config_file():
-    os.remove("config.txt")
-    set_whole_config_file()
-
-
-def vars_file_found_test():
-    return config_content("vars_test.txt", "@mail.co")
-
-
 if __name__ == "__main__":
-    print(vars_file_found_test())
-    setup_files()
+    con = Configs("/home/cyril/Desktop/ResAppWorkingFolder/configs.txt")
+    print(con.configs)
