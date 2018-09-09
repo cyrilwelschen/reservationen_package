@@ -8,6 +8,7 @@ filename = sys.argv[1]
 if filename.endswith('.dbf'):
     print "Converting %s to csv" % filename
     csv_fn = filename[:-4]+ ".csv"
+    print csv_fn
     with open(csv_fn,'wb') as csv_file:
         in_db = dbf.Dbf(filename)
         out_csv = csv.writer(csv_file)

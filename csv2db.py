@@ -1,5 +1,6 @@
 # python3
 
+import os
 from patterns_and_meanings import perform_matching
 from db_util import DbUtil
 
@@ -12,10 +13,10 @@ GUEST_DB = 'guest.db'
 
 
 class CsvToDb:
-    def __init__(self):
-        self.db = DbUtil(RES_DB)
+    def __init__(self, working_dir=""):
+        self.db = DbUtil(os.path.join(working_dir, RES_DB))
         self.db.create_table(CREATE_RES_TABLE)
-        self.db_guest = DbUtil(GUEST_DB)
+        self.db_guest = DbUtil(os.path.join(working_dir, GUEST_DB))
         self.db_guest.create_table(CREATE_GUEST_TABLE)
 
     @staticmethod
@@ -81,14 +82,14 @@ class CsvToDb:
             print("Index Error --> mail {}".format(index))
             return "99"
 
-    def read_and_convert(self):
-        li = self.read()
+    def read_and_convert(self, prot_file):
+        li = self.read(prot_file)
         self.convert(li)
 
     @staticmethod
-    def read():
+    def read(prot_file):
         row_list = []
-        with open("/home/cyril/Desktop/GastroDat2/Prot.csv", "rb") as fi:
+        with open(prot_file, "rb") as fi:
             for line in fi:
                 row_list.append(line.decode("iso-8859-1"))
         list_of_row_lists = []
@@ -153,4 +154,4 @@ class CsvToDb:
 
 if __name__ == "__main__":
     dbr = CsvToDb()
-    dbr.read_and_convert()
+    dbr.read_and_convert("/home/cyril/Desktop/GastroDat2/Prot.csv")
