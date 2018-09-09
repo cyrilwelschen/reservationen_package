@@ -3,7 +3,7 @@ import smtplib
 from_address = "example@gmail.com"
 to_address = "example@gmail.com"
 
-msg = "Test crown job"
+msg = "Test cron job"
 
 usr = "example.user"
 pwd = "PASSWORD"
