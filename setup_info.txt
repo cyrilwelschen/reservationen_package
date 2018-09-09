@@ -1,0 +1,12 @@
+1)
+pip install reservation_package
+pip install python-crontab
+
+2)
+download start_cron.py
+download cronjob.py
+download dbf2csv.py
+from github to configs.txt folder.
+
+3)
+run: python3 start_cron.py

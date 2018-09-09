@@ -42,8 +42,6 @@ def g_room_id(item_list):
 def generic(item_list, second_dic):
     gene = {"original_list": str(item_list), "room_index": g_room_id(item_list), "res_id": g_res_id(item_list),
             "guest_id": g_guest_id(item_list)}
-    # gene = {"room_index": g_room_id(item_list), "res_id": g_res_id(item_list),
-    #         "guest_id": g_guest_id(item_list)}
     return dict(gene, **second_dic)
 
 
@@ -88,7 +86,6 @@ def find_guest(item_string):
                 return mo.group(1)
 
 
-# todo: this doesn't work without , item_string) in first line
 def regex_ids(item_string):
     mo = re.match(r'^.*Nr:([0-9]+).*ZNr:.*([0-9]+).*$', item_string)
     if mo:

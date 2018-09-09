@@ -42,8 +42,3 @@ def config_content(file_path, content=None):
                     return True
     else:
         return False
-
-
-if __name__ == "__main__":
-    con = Configs("/home/cyril/Desktop/ResAppWorkingFolder/configs.txt")
-    print(con.configs)
