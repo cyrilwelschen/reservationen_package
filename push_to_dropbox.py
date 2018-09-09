@@ -1,10 +1,6 @@
 import dropbox
+import os
 from dropbox.files import WriteMode
-import time
-
-TIME_STAMP_FILE = "upload_stamp.txt"
-PROT_FILE = "Prot.dbf"
-GASTRO_PROT_DIR = "GastroData/"
 
 
 class TransferData:
@@ -20,27 +16,11 @@ class TransferData:
             dbx.files_upload(f.read(), file_to, mode=WriteMode('overwrite'))
 
 
-def upload(local_dir, filename):
-    access_token = 'dropbox_token'
+def upload(local_file_path, access_token, dropbox_folder=""):
     transfer_data = TransferData(access_token)
 
-    file_from = local_dir + filename
-    file_to = '/' + filename  # The full path to upload the file to, including the file name
+    file_from = local_file_path
+    file_to = dropbox_folder + '/' + os.path.basename(local_file_path)
 
     # API v2
     transfer_data.upload_file(file_from, file_to)
-
-
-def make_stamp():
-    with open(TIME_STAMP_FILE, "w") as f:
-        f.write(time.strftime("%X %d.%m.%y"))
-
-
-def main():
-    make_stamp()
-    upload("", TIME_STAMP_FILE)
-    upload(GASTRO_PROT_DIR, PROT_FILE)
-
-
-if __name__ == '__main__':
-    main()
