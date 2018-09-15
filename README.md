@@ -17,6 +17,11 @@ Finally:
 
 
 ## pip handling
+
+To create a new pip package version execute:
+
+`python3 setup.py sdist bdist_wheel`
+
 #### Upload package
 Upload to pip test with:
 
