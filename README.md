@@ -13,7 +13,7 @@ Package allows to convert and upload file.
     
 #### Modules needed
 
-* crontab
+* python-crontab
 
 Finally:
 
