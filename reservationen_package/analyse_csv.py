@@ -1,6 +1,6 @@
 # python3
 
-from patterns_and_meanings import perform_matching
+from reservationen_package.patterns_and_meanings import perform_matching
 
 
 def an_format(anab_str):

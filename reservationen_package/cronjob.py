@@ -1,8 +1,7 @@
 # local file ###
 
 import os
-# from reservationen_package import single_run_master
-import single_run_master
+from reservationen_package import single_run_master
 
 
 if __name__ == "__main__":

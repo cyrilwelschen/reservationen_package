@@ -1,8 +1,8 @@
 # python3
 
 import os
-from patterns_and_meanings import perform_matching
-from db_util import DbUtil
+from reservationen_package.patterns_and_meanings import perform_matching
+from reservationen_package.db_util import DbUtil
 
 
 CREATE_RES_TABLE = '''CREATE TABLE "reservations" ('res_id' TEXT UNIQUE, 'room_number' TEXT, 'check_in' TEXT,

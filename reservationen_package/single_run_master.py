@@ -1,9 +1,9 @@
 import shutil
 import os
 import time
-from configs import Configs
-from csv2db import CsvToDb
-from push_to_dropbox import upload
+from reservationen_package.configs import Configs
+from reservationen_package.csv2db import CsvToDb
+from reservationen_package.push_to_dropbox import upload
 
 
 def do_single_run(config_file_path):

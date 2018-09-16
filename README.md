@@ -11,6 +11,10 @@ Package allows to convert and upload file.
     * `prot_file_path: /path/to/Prot.dbf`
     * And in analogue format `working_dir`, `dropbox_access_token` and mail credentials
     
+#### Modules needed
+
+* crontab
+
 Finally:
 
     `python3 start_cron.py`
