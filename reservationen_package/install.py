@@ -1,5 +1,5 @@
 import urllib.request
-import os.path
+import os
 
 
 def download_from_github(branch="master", python_file=None, target_dir="."):
@@ -11,7 +11,8 @@ def download_from_github(branch="master", python_file=None, target_dir="."):
     print("download complete of {}!".format(python_file))
 
 
-current_branch = "03_refactoring_for_pip_package"
-download_from_github(branch=current_branch, python_file="dbf2csv.py", target_dir="/home/cyril/Desktop")
-download_from_github(branch=current_branch, python_file="cronjob.py", target_dir="/home/cyril/Desktop")
-download_from_github(branch=current_branch, python_file="start_cron.py", target_dir="/home/cyril/Desktop")
+def download_all(git_branch="master"):
+    current_path = os.getcwd()
+    download_from_github(branch=git_branch, python_file="dbf2csv.py", target_dir=current_path)
+    download_from_github(branch=git_branch, python_file="cronjob.py", target_dir=current_path)
+    download_from_github(branch=git_branch, python_file="start_cron.py", target_dir=current_path)

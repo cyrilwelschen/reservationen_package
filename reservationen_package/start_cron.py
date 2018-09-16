@@ -1,6 +1,6 @@
 # local file ###
 
-import os
+import os.path
 from crontab import CronTab
 from reservationen_package.configs import Configs
 

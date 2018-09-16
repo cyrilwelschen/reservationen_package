@@ -6,7 +6,7 @@ Package allows to convert and upload file.
 
 * Install package via pip, see below in "pip handling" section
 * Create a local working directory
-* Download files 'start_cron.py', 'cronjob.py' and 'dbf2cyv.py' from [reservationen_package](https://github.com/cyrilwelschen/reservationen_package) into working directory
+* [since version 0.0.5 can auto-download, see section "install"] (Download files 'start_cron.py', 'cronjob.py' and 'dbf2cyv.py' from [reservationen_package](https://github.com/cyrilwelschen/reservationen_package) into working directory)
 * Create 'configs.txt' containing
     * `prot_file_path: /path/to/Prot.dbf`
     * And in analogue format `working_dir`, `dropbox_access_token` and mail credentials
@@ -19,6 +19,12 @@ Finally:
 
     `python3 start_cron.py`
 
+### Install
+
+Run the following to auto-download required files:
+
+    import reservationen_package.install as ins
+    ins.download_all(git_branch="master")
 
 ## pip handling
 
