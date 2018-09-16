@@ -29,7 +29,7 @@ To create a new pip package version execute:
 #### Upload package
 Upload to pip test with:
 
-`python3 -m twine upload --repository-url https://test.pypi.org/legacy dist/*`
+`python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*`
 
 
 #### Download package
