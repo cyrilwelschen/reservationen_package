@@ -6,9 +6,9 @@ from reservationen_package.csv2db import CsvToDb
 from reservationen_package.push_to_dropbox import upload
 
 
-def do_single_run(config_file_path):
+def do_single_run(config_path):
     # load configs
-    cons = Configs(config_file_path)
+    cons = Configs(config_file_path=config_path)
     wd = cons.configs["working_dir"]
     prod_source_path = cons.configs["prot_file_path"]
     d_access = cons.configs["dropbox_access_token"]
