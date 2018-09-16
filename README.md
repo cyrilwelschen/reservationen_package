@@ -37,6 +37,10 @@ Download with:
 
 `python3 -m pip install --index-url https://test.pypi.org/simple/ reservationen_package`
 
+or for a specific version:
+
+`python3 -m pip install --index-url https://test.pypi.org/simple/ reservationen_package==0.0.4`
+
 You can use
 [Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
 to write your content.
