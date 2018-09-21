@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="reservationen_package",
-    version="0.0.6",
+    version="0.0.7",
     author="Cyril Welschen",
     author_email="cj.welschen@gmail.com",
     description="package to handle conversion and upload",

@@ -83,7 +83,10 @@ def find_guest(item_string):
                 return mo.group(1)
             else:
                 mo = re.match(r'^.*ert: - ([a-zA-Z]+).*$', item_string)
-                return mo.group(1)
+                if mo:
+                    return mo.group(1)
+                else:
+                    return "no_found_regex"
 
 
 def regex_ids(item_string):
