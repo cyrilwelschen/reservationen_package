@@ -30,7 +30,7 @@ class Configs:
     @staticmethod
     def known_configs():
         return ["dropbox_access_token", "status", "admin", "mail_to", "mail_from", "mail_from_pwd", "prot_file_path",
-                "working_dir"]
+                "working_dir", "python2_path", "python3_path"]
 
 
 def config_content(file_path, content=None):

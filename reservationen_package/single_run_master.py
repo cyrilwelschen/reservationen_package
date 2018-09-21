@@ -20,7 +20,7 @@ def do_single_run(config_path):
         raise FileNotFoundError("Prot.dbf file not correctly copied to working directory.")
 
     # convert dbf to csv
-    command_dbf_to_csv = "python {} {}".format(os.path.join(wd, "dbf2csv.py"), os.path.join(wd, "Prot.dbf"))
+    command_dbf_to_csv = "{} {} {}".format(cons.configs["python2_path"], os.path.join(wd, "dbf2csv.py"), os.path.join(wd, "Prot.dbf"))
     os.system(command_dbf_to_csv)
     if not os.path.exists(os.path.join(wd, "Prot.csv")):
         # todo: write mail

@@ -9,7 +9,7 @@ if __name__ == "__main__":
     # todo: make this windows compatible with using CronTab(tab=""" ***** commmand"""). See python-crontab doc...
     my_cron = CronTab(user=True)
     print(con.configs["working_dir"])
-    command = "python3 {}".format(os.path.join(con.configs["working_dir"], "cronjob.py"))
+    command = "{} {}".format(con.configs["python3_path"], os.path.join(con.configs["working_dir"], "cronjob.py"))
     job = my_cron.new(command=command, comment="reservation app cron job")
     job.hour.every(1)
     my_cron.write()
