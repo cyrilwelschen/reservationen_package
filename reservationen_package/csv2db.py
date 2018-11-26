@@ -98,7 +98,7 @@ class CsvToDb:
         return list_of_row_lists
 
     def convert(self, list_of_row_lists):
-        c, u, g, d, unf = 0, 0, 0, 0, 0
+        c, u, g, d, unf, not_found = 0, 0, 0, 0, 0, 0
         room_ids = []
         res_ids = []
         for row in list_of_row_lists:
@@ -142,7 +142,8 @@ class CsvToDb:
             else:
                 # todo: send mail (with print statement) when pattern not found
                 print("Couldn't find pattern corresponding to {}".format(clean_row))
-        print(c, u, g, d, unf)
+                not_found += 1
+        print(c, u, g, d, unf, not_found)
         print(set(room_ids))
         print(len(set(res_ids)))
         self.db.conn.commit()
